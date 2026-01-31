@@ -99,3 +99,20 @@ python3 agents/dependency_graph/main.py <path_to_analyzer_json>
 
 **Integration with FOG:**
 The agent provides a `handle_task` function in `agents/dependency_graph/handler.py` that can be registered with FOG. It expects the output of the Structure Analyzer as input.
+
+### Logic Summarizer Agent
+This agent provides human-readable explanations of Python modules by leveraging Large Language Models (LLMs).
+
+**Key Features:**
+- Pluggable LLM connector interface (no vendor lock-in).
+- Automatic chunking of long files for LLM context limits.
+- Generates summary, purpose, module role, and risk complexity score.
+- Structured JSON output.
+
+**Usage (Standalone):**
+```bash
+python3 agents/logic_summarizer/main.py --file <path_to_file>
+```
+
+**Integration with FOG:**
+The agent provides a `handle_task` function in `agents/logic_summarizer/handler.py` that can be registered with FOG. It expects a `file_path` or `text` in the task payload.
