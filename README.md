@@ -61,3 +61,23 @@ Run the unit test suite:
 export PYTHONPATH=$PYTHONPATH:.
 python3 -m unittest discover tests
 ```
+
+## Supporting Agents
+
+### Code Structure Analyzer Agent
+This agent analyzes Python files and extracts structural metadata (classes, functions, imports, decorators, etc.). It is designed to be used as a supporting system for FOG.
+
+**Key Features:**
+- Recursive scanning of `.py` files.
+- Extraction of classes, inheritance, functions, methods, and decorators.
+- Detection of internal vs. external imports.
+- Line counts per file and per structural element.
+- JSON output schema for easy integration.
+
+**Usage (Standalone):**
+```bash
+python3 agents/structure_analyzer/main.py <path_to_project>
+```
+
+**Integration with FOG:**
+The agent provides a `handle_task` function in `agents/structure_analyzer/handler.py` that can be registered with FOG as a mock or HTTP connector.
