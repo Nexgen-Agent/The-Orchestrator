@@ -1,6 +1,7 @@
 import logging
 import json
 import sys
+import os
 from datetime import datetime
 from typing import Any, Dict
 
@@ -8,6 +9,9 @@ class StructuredLogger:
     def __init__(self, name: str, log_file: str = "storage/audit.log"):
         self.logger = logging.getLogger(name)
         self.logger.setLevel(logging.INFO)
+
+        # Ensure log directory exists
+        os.makedirs(os.path.dirname(log_file), exist_ok=True)
 
         # Console handler
         console_handler = logging.StreamHandler(sys.stdout)

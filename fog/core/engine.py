@@ -70,7 +70,7 @@ class OrchestrationEngine:
         if not agent:
             task.status = TaskStatus.FAILED
             task.result = {"error": f"Agent {task.system_name} not found"}
-            state_store.update_task(task.task_id, task.dict())
+            state_store.update_task(task.task_id, task.model_dump(mode='json'))
             logger.error("AGENT_NOT_FOUND", {"task_id": task.task_id, "agent": task.system_name})
             return
 
