@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+*$py.class
+backups/*.zip
+storage/*.log
+storage/*.json
+dummy_project/
+tests/test_backups/
+tests/test_project/
+tests/test_mapper_project/
