@@ -134,3 +134,22 @@ python3 agents/semantic_tagger/main.py --text "If you buy now, we will process y
 
 **Integration with FOG:**
 The agent provides a `handle_task` function in `agents/semantic_tagger/handler.py` that can be registered with FOG. It expects a `file_path` or `text` in the task payload.
+
+### Code Quality Evaluation Agent
+This agent evaluates Python code quality and risk signals.
+
+**Key Features:**
+- Computes cyclomatic complexity per function.
+- Detects long functions and deep nesting.
+- Identifies risky operations missing try/except blocks.
+- Finds unused imports.
+- Provides a weighted quality score (1-100) per file.
+- Generates structured JSON risk reports.
+
+**Usage (Standalone):**
+```bash
+python3 agents/code_quality/main.py --path <path_to_project>
+```
+
+**Integration with FOG:**
+The agent provides a `handle_task` function in `agents/code_quality/handler.py` that can be registered with FOG. It expects a `project_path` or `file_path` in the task payload.
