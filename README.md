@@ -257,3 +257,21 @@ python3 agents/test_generator/main.py <path_to_analyzer_json> --write
 
 **Integration with FOG:**
 The agent provides a `handle_task` function in `agents/test_generator/handler.py`. It expects a `project_analysis` (from Structure Analyzer) in the task payload.
+
+### Orchestration Optimization Agent
+This agent analyzes orchestration task history and logs to improve routing efficiency and system performance.
+
+**Key Features:**
+- Parses orchestration logs to extract performance metrics.
+- Detects slow agents and high failure rates.
+- Identifies recurring failure patterns.
+- Recommends improvements for routing, timeouts, and retries.
+- Produces execution performance metrics and optimization suggestions.
+
+**Usage (Standalone):**
+```bash
+python3 agents/orchestration_optimizer/main.py --logs storage/audit.log
+```
+
+**Integration with FOG:**
+The agent provides a `handle_task` function in `agents/orchestration_optimizer/handler.py` that analyzes the system's audit logs.
