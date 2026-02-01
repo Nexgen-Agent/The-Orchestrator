@@ -187,3 +187,21 @@ python3 agents/prompt_orchestrator/main.py <path_to_architecture_json>
 
 **Integration with FOG:**
 The agent provides a `handle_task` function in `agents/prompt_orchestrator/handler.py`. It expects an `architecture_map` in the task payload.
+
+### Security Analysis Agent
+This agent scans Python code for security risks, including hardcoded secrets and unsafe code patterns.
+
+**Key Features:**
+- Detects hardcoded secrets (API keys, tokens, etc.) using regex.
+- Identifies unsafe code patterns (e.g., `eval`, `exec`, `os.system`) via AST analysis.
+- Flags risky dependencies (e.g., `pickle`).
+- Categorizes risk severity (Low, Medium, High, Critical).
+- Produces structured security reports.
+
+**Usage (Standalone):**
+```bash
+python3 agents/security_analyzer/main.py --path <path_to_project>
+```
+
+**Integration with FOG:**
+The agent provides a `handle_task` function in `agents/security_analyzer/handler.py`. It expects a `project_path` or `file_path` in the task payload.
