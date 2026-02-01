@@ -116,3 +116,21 @@ python3 agents/logic_summarizer/main.py --file <path_to_file>
 
 **Integration with FOG:**
 The agent provides a `handle_task` function in `agents/logic_summarizer/handler.py` that can be registered with FOG. It expects a `file_path` or `text` in the task payload.
+
+### Semantic Intent Tagging Agent
+This agent tags code and documents with business, psychology, and philosophy signals, providing insights into the semantic intent of the content.
+
+**Key Features:**
+- Detects decision rules, persuasion logic, business flows, and behavioral triggers.
+- Categorizes tags (business, psychology, philosophy).
+- Provides confidence scores per detected tag.
+- Pluggable AI model interface.
+- Structured JSON output.
+
+**Usage (Standalone):**
+```bash
+python3 agents/semantic_tagger/main.py --text "If you buy now, we will process your order immediately."
+```
+
+**Integration with FOG:**
+The agent provides a `handle_task` function in `agents/semantic_tagger/handler.py` that can be registered with FOG. It expects a `file_path` or `text` in the task payload.

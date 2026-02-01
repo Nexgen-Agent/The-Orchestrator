@@ -60,7 +60,7 @@ async def rollback(backup_id: str):
 @router.get("/dependency-map")
 async def get_dependency_map(project_path: str):
     try:
-        graph = mapper.scan_project(project_path)
+        graph = await asyncio.to_thread(mapper.scan_project, project_path)
         return graph
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
