@@ -240,3 +240,20 @@ python3 agents/deployment_preparer/main.py <path_to_project> --write
 
 **Integration with FOG:**
 The agent provides a `handle_task` function in `agents/deployment_preparer/handler.py`. It expects a `project_path` in the task payload.
+
+### Automated Test Generator Agent
+This agent generates Python unit tests from module structure metadata, helping to improve test coverage.
+
+**Key Features:**
+- Generates `pytest` test stubs for classes and functions.
+- Detects missing test coverage by comparing project structure with existing tests.
+- Produces complete, runnable test files.
+- Provides coverage recommendations and importance levels.
+
+**Usage (Standalone):**
+```bash
+python3 agents/test_generator/main.py <path_to_analyzer_json> --write
+```
+
+**Integration with FOG:**
+The agent provides a `handle_task` function in `agents/test_generator/handler.py`. It expects a `project_analysis` (from Structure Analyzer) in the task payload.
