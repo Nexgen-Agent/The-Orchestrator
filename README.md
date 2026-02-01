@@ -205,3 +205,20 @@ python3 agents/security_analyzer/main.py --path <path_to_project>
 
 **Integration with FOG:**
 The agent provides a `handle_task` function in `agents/security_analyzer/handler.py`. It expects a `project_path` or `file_path` in the task payload.
+
+### System Monitoring Agent
+This agent monitors system and agent health, tracking uptime, task success rates, and detecting failure patterns.
+
+**Key Features:**
+- Tracks agent availability.
+- Calculates real-time task success rates and retry metrics.
+- Detects recurring failure patterns (e.g., unstable agents).
+- Produces comprehensive system health reports.
+
+**Usage (Standalone):**
+```bash
+python3 agents/system_monitor/main.py
+```
+
+**Integration with FOG:**
+The agent provides a `handle_task` function in `agents/system_monitor/handler.py`. It leverages the global `state_store` to analyze system metrics.
