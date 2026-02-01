@@ -170,3 +170,20 @@ python3 agents/backup_verifier/main.py <path_to_backup_zip> --project <path_to_p
 
 **Integration with FOG:**
 The agent provides a `handle_task` function in `agents/backup_verifier/handler.py` that can be registered with FOG. It expects an `archive_path` and optionally a `project_path` in the task payload.
+
+### Prompt Orchestration Agent
+This agent generates structured build instructions for AI models based on architectural dependency maps.
+
+**Key Features:**
+- Dependency-aware topological sorting of build steps.
+- Generates detailed Component Instructions (purpose, steps, constraints).
+- Produces structured prompts for AI builders.
+- Maintains modular build hierarchies.
+
+**Usage (Standalone):**
+```bash
+python3 agents/prompt_orchestrator/main.py <path_to_architecture_json>
+```
+
+**Integration with FOG:**
+The agent provides a `handle_task` function in `agents/prompt_orchestrator/handler.py`. It expects an `architecture_map` in the task payload.
