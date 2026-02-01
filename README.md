@@ -222,3 +222,21 @@ python3 agents/system_monitor/main.py
 
 **Integration with FOG:**
 The agent provides a `handle_task` function in `agents/system_monitor/handler.py`. It leverages the global `state_store` to analyze system metrics.
+
+### Deployment Preparation Agent
+This agent prepares Python projects for deployment by generating necessary configuration files and detecting missing dependencies.
+
+**Key Features:**
+- Generates `Dockerfile` for containerization.
+- Generates `requirements.txt` by scanning project imports.
+- Builds `start.sh` startup scripts.
+- Detects potentially missing dependencies.
+- Produces structured deployment reports.
+
+**Usage (Standalone):**
+```bash
+python3 agents/deployment_preparer/main.py <path_to_project> --write
+```
+
+**Integration with FOG:**
+The agent provides a `handle_task` function in `agents/deployment_preparer/handler.py`. It expects a `project_path` in the task payload.
