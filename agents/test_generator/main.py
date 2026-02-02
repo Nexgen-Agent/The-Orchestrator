@@ -6,7 +6,7 @@ import sys
 # Add the parent directory to sys.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 
-from agents.test_generator.generator import TestGenerator
+from agents.test_generator.generator import AutomatedTestGenerator
 
 def main():
     parser = argparse.ArgumentParser(description="Automated Test Generator Agent")
@@ -26,7 +26,7 @@ def main():
             project_analysis = json.load(f)
 
         print(f"Generating tests from: {args.input}...")
-        generator = TestGenerator()
+        generator = AutomatedTestGenerator()
         report = generator.run_full_report(project_analysis)
         output_data = report.model_dump(mode='json')
 
