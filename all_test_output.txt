@@ -1,0 +1,37 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.12, pytest-9.0.2, pluggy-1.6.0
+rootdir: /app
+plugins: asyncio-1.3.0, anyio-4.12.1
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 32 items
+
+tests/test_analyzer.py .                                                 [  3%]
+tests/test_backup.py .                                                   [  6%]
+tests/test_backup_verifier.py .....                                      [ 21%]
+tests/test_code_quality.py .                                             [ 25%]
+tests/test_dependency_graph.py ..                                        [ 31%]
+tests/test_deployment_preparer.py ..                                     [ 37%]
+tests/test_engine.py .                                                   [ 40%]
+tests/test_evolution_coordinator.py ...                                  [ 50%]
+tests/test_knowledge_memory.py ..                                        [ 56%]
+tests/test_logic_summarizer.py ...                                       [ 65%]
+tests/test_mapper.py .                                                   [ 68%]
+tests/test_orchestration_optimizer.py .                                  [ 71%]
+tests/test_prompt_orchestrator.py ..                                     [ 78%]
+tests/test_security_analyzer.py .                                        [ 81%]
+tests/test_semantic_tagger.py ..                                         [ 87%]
+tests/test_system_monitor.py .                                           [ 90%]
+tests/test_test_generator.py ...                                         [100%]
+
+=============================== warnings summary ===============================
+agents/test_generator/generator.py:5
+  /app/agents/test_generator/generator.py:5: PytestCollectionWarning: cannot collect test class 'TestGenerator' because it has a __init__ constructor (from: tests/test_test_generator.py)
+    class TestGenerator:
+
+tests/test_knowledge_memory.py::test_store_and_search
+tests/test_knowledge_memory.py::test_handler_store_and_search
+  /app/agents/knowledge_memory/memory_store.py:42: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    timestamp=datetime.utcnow()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 32 passed, 3 warnings in 4.01s ========================

@@ -1,9 +1,9 @@
 import unittest
-from agents.test_generator.generator import TestGenerator
+from agents.test_generator.generator import AutomatedTestGenerator
 
 class TestTestGenerator(unittest.TestCase):
     def setUp(self):
-        self.generator = TestGenerator()
+        self.generator = AutomatedTestGenerator()
         self.file_analysis = {
             "file_path": "/app/math_utils.py",
             "file_name": "math_utils.py",

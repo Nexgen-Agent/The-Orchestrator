@@ -1,6 +1,6 @@
 import asyncio
 from typing import Dict, Any
-from agents.test_generator.generator import TestGenerator
+from agents.test_generator.generator import AutomatedTestGenerator
 
 async def handle_task(task_packet: Dict[str, Any]) -> Dict[str, Any]:
     """
@@ -14,7 +14,7 @@ async def handle_task(task_packet: Dict[str, Any]) -> Dict[str, Any]:
         return {"status": "error", "message": "Missing project_analysis in payload"}
 
     try:
-        generator = TestGenerator()
+        generator = AutomatedTestGenerator()
         report = generator.run_full_report(project_analysis)
 
         return {

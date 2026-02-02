@@ -2,7 +2,7 @@ import os
 from typing import List, Dict, Any
 from agents.test_generator.models import TestStub, TestFile, CoverageRecommendation, TestGenerationReport
 
-class TestGenerator:
+class AutomatedTestGenerator:
     def __init__(self, root_path: str = ""):
         self.root_path = root_path
 
