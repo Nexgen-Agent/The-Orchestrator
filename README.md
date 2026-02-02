@@ -275,3 +275,20 @@ python3 agents/orchestration_optimizer/main.py --logs storage/audit.log
 
 **Integration with FOG:**
 The agent provides a `handle_task` function in `agents/orchestration_optimizer/handler.py` that analyzes the system's audit logs.
+
+### Autonomous Evolution Coordinator
+This agent coordinates system-wide agent improvements by monitoring performance, triggering improvement cycles, and applying upgrades safely.
+
+**Key Features:**
+- Monitors agent performance metrics (success rate, retries).
+- Automatically triggers improvement cycles for underperforming agents.
+- Ensures safety by requiring backups before any changes are applied.
+- Tracks the evolution history of the entire ecosystem.
+
+**Usage (Standalone):**
+```bash
+python3 agents/evolution_coordinator/main.py --action trigger
+```
+
+**Integration with FOG:**
+The agent provides a `handle_task` function in `agents/evolution_coordinator/handler.py`. It can trigger a cycle or apply a specific evolution step.
