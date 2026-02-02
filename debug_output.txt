@@ -1,3 +1,0 @@
-/home/jules/.local/bin/pytest
-/home/jules/.pyenv/shims/python
-pytest 9.0.2

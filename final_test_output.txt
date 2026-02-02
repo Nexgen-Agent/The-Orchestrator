@@ -1,0 +1,27 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.12, pytest-9.0.2, pluggy-1.6.0
+rootdir: /app
+plugins: asyncio-1.3.0, anyio-4.12.1
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 35 items
+
+tests/test_analyzer.py .                                                 [  2%]
+tests/test_architecture_refactor.py ...                                  [ 11%]
+tests/test_backup.py .                                                   [ 14%]
+tests/test_backup_verifier.py .....                                      [ 28%]
+tests/test_code_quality.py .                                             [ 31%]
+tests/test_dependency_graph.py ..                                        [ 37%]
+tests/test_deployment_preparer.py ..                                     [ 42%]
+tests/test_engine.py .                                                   [ 45%]
+tests/test_evolution_coordinator.py ...                                  [ 54%]
+tests/test_knowledge_memory.py ..                                        [ 60%]
+tests/test_logic_summarizer.py ...                                       [ 68%]
+tests/test_mapper.py .                                                   [ 71%]
+tests/test_orchestration_optimizer.py .                                  [ 74%]
+tests/test_prompt_orchestrator.py ..                                     [ 80%]
+tests/test_security_analyzer.py .                                        [ 82%]
+tests/test_semantic_tagger.py ..                                         [ 88%]
+tests/test_system_monitor.py .                                           [ 91%]
+tests/test_test_generator.py ...                                         [100%]
+
+============================== 35 passed in 4.14s ==============================
