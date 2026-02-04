@@ -6,6 +6,8 @@ from fog.core.queue import task_queue
 from fog.core.state import state_store
 from fog.core.backup import backup_manager
 from fog.core.logging import logger
+from agents.human_control_interface.control import HumanControlInterface
+from agents.human_control_interface.models import ApprovalStatus
 
 class OrchestrationEngine:
     def __init__(self):
@@ -52,7 +54,18 @@ class OrchestrationEngine:
         await task_queue.enqueue(task)
 
     async def _worker(self):
+        hci = HumanControlInterface()
         while self.running:
+            controls = hci.get_controls()
+            if controls.get("emergency_stop"):
+                logger.warning("ENGINE_PAUSED_EMERGENCY_STOP")
+                await asyncio.sleep(5)
+                continue
+
+            if controls.get("is_paused"):
+                await asyncio.sleep(2)
+                continue
+
             task = await task_queue.dequeue()
             try:
                 await self._process_task(task)
@@ -62,6 +75,40 @@ class OrchestrationEngine:
                 task_queue.task_done()
 
     async def _process_task(self, task: TaskPacket):
+        hci = HumanControlInterface()
+
+        # Check if agent is enabled
+        toggles = hci.get_agent_toggles()
+        if toggles.get(task.system_name) is False:
+            logger.warning("AGENT_DISABLED_TASK_REJECTED", {"task_id": task.task_id, "agent": task.system_name})
+            await self._handle_failure(task, f"Agent {task.system_name} is currently disabled")
+            return
+
+        # Human approval check for high-risk tasks
+        if task.task_type in [TaskType.MODIFICATION, TaskType.DEPLOYMENT]:
+            state = state_store.get_state()
+            approvals = state.get("approvals", {})
+
+            # Find if there is an approval for this task
+            approval = next((ApprovalStatus(a["status"]) for a in approvals.values() if a["task_id"] == task.task_id), None)
+
+            if approval != ApprovalStatus.APPROVED:
+                if approval is None:
+                    hci.request_approval(task, requester="OrchestrationEngine")
+                    logger.info("APPROVAL_REQUESTED_FOR_TASK", {"task_id": task.task_id})
+                elif approval == ApprovalStatus.REJECTED:
+                    logger.warning("TASK_REJECTED_BY_HUMAN", {"task_id": task.task_id})
+                    await self._handle_failure(task, "Task rejected by human approval")
+                    return
+
+                # Re-enqueue and wait
+                logger.info("TASK_AWAITING_APPROVAL", {"task_id": task.task_id})
+                task.status = TaskStatus.PENDING
+                state_store.update_task(task.task_id, task.model_dump(mode='json'))
+                await asyncio.sleep(5)
+                await task_queue.enqueue(task)
+                return
+
         task.status = TaskStatus.RUNNING
         state_store.update_task(task.task_id, task.model_dump(mode='json'))
         logger.info("PROCESSING_TASK", {"task_id": task.task_id, "agent": task.system_name})

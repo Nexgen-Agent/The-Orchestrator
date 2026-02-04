@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fog.api.router import router
+from agents.human_control_interface.api import router as human_control_router
 from fog.core.engine import orchestration_engine
 import asyncio
 from contextlib import asynccontextmanager
@@ -13,6 +14,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="Frontier Orchestration Gateway (FOG)", lifespan=lifespan)
 
 app.include_router(router)
+app.include_router(human_control_router)
 
 @app.get("/")
 async def root():
