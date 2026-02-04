@@ -1,0 +1,4 @@
+#!/bin/bash
+# FOG Unified CLI
+export PYTHONPATH=$PYTHONPATH:.
+python3 -m fog.cli "$@"

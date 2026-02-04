@@ -258,6 +258,24 @@ python3 agents/test_generator/main.py <path_to_analyzer_json> --write
 **Integration with FOG:**
 The agent provides a `handle_task` function in `agents/test_generator/handler.py`. It expects a `project_analysis` (from Structure Analyzer) in the task payload.
 
+### Website Insight Scout Agent
+This agent analyzes publicly accessible websites to extract actionable insights about UX, UI, marketing, psychology, and architecture.
+
+**Key Features:**
+- Website ingestion using headless Playwright browser.
+- UI hierarchy extraction and design pattern detection.
+- Marketing and psychology cue detection (CTAs, persuasion techniques).
+- Architectural insight inference and optimization suggestions.
+- Visual snapshot capture.
+
+**Usage (via FOG CLI):**
+```bash
+./bin/fog scout-website https://example.com --analyze-ui --analyze-ux --generate-report
+```
+
+**Integration with FOG:**
+The agent provides a `handle_task` function in `agents/website_insight_scout/handler.py`. It expects a `url` and optional analysis flags in the task payload.
+
 ### Orchestration Optimization Agent
 This agent analyzes orchestration task history and logs to improve routing efficiency and system performance.
 
