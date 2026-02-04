@@ -13,6 +13,9 @@ from agents.debugger.api import router as debugger_router
 from fog.core.engine import orchestration_engine
 import asyncio
 from contextlib import asynccontextmanager
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+import os
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -34,9 +37,12 @@ app.include_router(visualization_router)
 app.include_router(builder_router)
 app.include_router(debugger_router)
 
+# Static files for frontend
+app.mount("/static", StaticFiles(directory="fog/frontend"), name="static")
+
 @app.get("/")
 async def root():
-    return {"message": "Welcome to Frontier Orchestration Gateway (FOG)"}
+    return FileResponse("fog/frontend/index.html")
 
 if __name__ == "__main__":
     import uvicorn
