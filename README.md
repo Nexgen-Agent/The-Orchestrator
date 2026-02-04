@@ -258,23 +258,58 @@ python3 agents/test_generator/main.py <path_to_analyzer_json> --write
 **Integration with FOG:**
 The agent provides a `handle_task` function in `agents/test_generator/handler.py`. It expects a `project_analysis` (from Structure Analyzer) in the task payload.
 
-### Website Insight Scout Agent
-This agent analyzes publicly accessible websites to extract actionable insights about UX, UI, marketing, psychology, and architecture.
+### Website Insight Scout & Multi-Site Analyzer Agent
+This agent analyzes publicly accessible websites to extract actionable insights about UX, UI, marketing, psychology, and architecture, with support for multi-site comparison and ranking.
 
 **Key Features:**
 - Website ingestion using headless Playwright browser.
-- UI hierarchy extraction and design pattern detection.
+- UI hierarchy extraction and design pattern detection (colors, fonts, etc.).
 - Marketing and psychology cue detection (CTAs, persuasion techniques).
 - Architectural insight inference and optimization suggestions.
-- Visual snapshot capture.
+- Multi-site parallel analysis and comparison.
+- Element performance scoring and ranking by engagement potential.
+- Automated replication manifests for component reproduction.
+- Visual snapshot capture and mock heatmap generation.
 
 **Usage (via FOG CLI):**
 ```bash
-./bin/fog scout-website https://example.com --analyze-ui --analyze-ux --generate-report
+# Single site analysis
+./bin/fog scout-website https://example.com --generate-report
+
+# Multi-site comparison
+./bin/fog multi-analyze https://example.com https://google.com --generate-report
+
+# Replication manifest generation
+./bin/fog scout-website https://example.com --replicate
 ```
 
 **Integration with FOG:**
-The agent provides a `handle_task` function in `agents/website_insight_scout/handler.py`. It expects a `url` and optional analysis flags in the task payload.
+The agent provides a `handle_task` function in `agents/website_insight_scout/handler.py`. It supports `analyze`, `multi_analyze`, and `generate_replication` task types.
+
+### Personality & Adaptive Style Engine
+This agent learns and adapts to the user's personality, tone, and energy to provide a personalized orchestration experience.
+
+**Key Features:**
+- Interaction analysis for tone, energy, and sentence rhythm detection.
+- Persistent Style Fingerprints for users.
+- Dynamic adaptation parameters for mirroring and verbosity adjustment.
+- Real-time learning from user interactions.
+- Integration hooks for other FOG agents to align their personality.
+
+**Usage (via FOG CLI):**
+```bash
+# Analyze user text and update profile
+./bin/fog personality analyze --text "Yo, this is awesome! Get it done ASAP!" --user jules
+
+# View style fingerprint
+./bin/fog personality view-profile --user jules
+
+# Get adaptation parameters
+./bin/fog personality adapt --user jules
+```
+
+**Integration with FOG:**
+The agent provides a `handle_task` function in `agents/personality_engine/handler.py`. It supports `LEARN_STYLE` and `GET_PERSONALITY_PARAMS` task types.
 
 ### Orchestration Optimization Agent
 This agent analyzes orchestration task history and logs to improve routing efficiency and system performance.

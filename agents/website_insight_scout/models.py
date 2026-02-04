@@ -41,3 +41,33 @@ class WebsiteAnalysisResult(BaseModel):
     heatmap_path: Optional[str] = None
     ui_graph_path: Optional[str] = None
     status: str = "completed"
+
+# Advanced Multi-Site Models
+
+class PerformanceScore(BaseModel):
+    visual_appeal: float # 0-100
+    efficiency: float    # 0-100
+    ux_flow: float       # 0-100
+    overall: float       # 0-100
+
+class RankedElement(BaseModel):
+    element: UIElement
+    score: PerformanceScore
+    priority: int        # 1-10
+    is_core: bool
+
+class MultiSiteComparison(BaseModel):
+    urls: List[str]
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    rankings: Dict[str, float] # URL -> overall score
+    top_elements: List[RankedElement]
+    common_patterns: List[str]
+
+class ReplicationManifest(BaseModel):
+    source_url: str
+    target_platform: str = "web"
+    components: List[RankedElement]
+    styling_rules: Dict[str, str]
+    logic_hints: List[str]
+    multi_language_support: bool = False
+    language_schema: Dict[str, Any] = {}
