@@ -6,18 +6,24 @@ def main():
     if len(sys.argv) < 2:
         print("Usage: python3 -m fog.cli <command> [args]")
         print("Available commands:")
-        print("  scout-website <url> [options]  - Analyze a website for insights")
+        print("  scout-website <url> [options]   - Analyze a website for insights")
+        print("  multi-analyze <urls> [options]  - Compare multiple websites and rank elements")
         sys.exit(1)
 
     command = sys.argv[1]
     args = sys.argv[2:]
 
-    if command == "scout-website":
+    if command in ["scout-website", "multi-analyze"]:
         # Call the Website Insight Scout main.py
         # Get the root directory (one level up from fog/ directory)
         root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
         agent_path = os.path.join(root_dir, "agents", "website_insight_scout", "main.py")
-        cmd = [sys.executable, agent_path] + args
+
+        extra_args = []
+        if command == "multi-analyze":
+            extra_args = ["--compare"]
+
+        cmd = [sys.executable, agent_path] + extra_args + args
         try:
             subprocess.run(cmd, check=True)
         except subprocess.CalledProcessError as e:
