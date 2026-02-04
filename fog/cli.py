@@ -8,12 +8,21 @@ def main():
         print("Available commands:")
         print("  scout-website <url> [options]   - Analyze a website for insights")
         print("  multi-analyze <urls> [options]  - Compare multiple websites and rank elements")
+        print("  personality <command> [args]    - Adaptive personality engine commands")
         sys.exit(1)
 
     command = sys.argv[1]
     args = sys.argv[2:]
 
-    if command in ["scout-website", "multi-analyze"]:
+    if command == "personality":
+        root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+        agent_path = os.path.join(root_dir, "agents", "personality_engine", "main.py")
+        cmd = [sys.executable, agent_path] + args
+        try:
+            subprocess.run(cmd, check=True)
+        except subprocess.CalledProcessError as e:
+            sys.exit(e.returncode)
+    elif command in ["scout-website", "multi-analyze"]:
         # Call the Website Insight Scout main.py
         # Get the root directory (one level up from fog/ directory)
         root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
