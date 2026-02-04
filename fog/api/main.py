@@ -8,6 +8,8 @@ from agents.shooting_star_ingestion.api import router as ingestion_router
 from agents.deployment_automation.api import router as deployment_router
 from agents.learning_feedback.api import router as learning_router
 from agents.visualization.api import router as visualization_router
+from agents.software_builder.api import router as builder_router
+from agents.debugger.api import router as debugger_router
 from fog.core.engine import orchestration_engine
 import asyncio
 from contextlib import asynccontextmanager
@@ -29,6 +31,8 @@ app.include_router(ingestion_router)
 app.include_router(deployment_router)
 app.include_router(learning_router)
 app.include_router(visualization_router)
+app.include_router(builder_router)
+app.include_router(debugger_router)
 
 @app.get("/")
 async def root():
