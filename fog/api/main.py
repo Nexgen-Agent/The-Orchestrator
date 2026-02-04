@@ -4,6 +4,8 @@ from agents.human_control_interface.api import router as human_control_router
 from agents.meta_evolution.api import router as meta_evolution_router
 from agents.system_resilience.api import router as system_resilience_router
 from agents.agent_collaboration.api import router as collaboration_router
+from agents.shooting_star_ingestion.api import router as ingestion_router
+from agents.deployment_automation.api import router as deployment_router
 from fog.core.engine import orchestration_engine
 import asyncio
 from contextlib import asynccontextmanager
@@ -21,6 +23,8 @@ app.include_router(human_control_router)
 app.include_router(meta_evolution_router)
 app.include_router(system_resilience_router)
 app.include_router(collaboration_router)
+app.include_router(ingestion_router)
+app.include_router(deployment_router)
 
 @app.get("/")
 async def root():
