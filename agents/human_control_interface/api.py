@@ -51,3 +51,23 @@ async def toggle_agent(agent_name: str, enabled: bool):
 @router.get("/agent-toggles")
 async def get_agent_toggles():
     return control.get_agent_toggles()
+
+@router.post("/rollback/{backup_id}")
+async def rollback(backup_id: str):
+    from fog.core.backup import backup_manager
+    try:
+        backup_manager.rollback(backup_id)
+        return {"status": "success", "message": f"Rolled back to {backup_id}"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/dispatch-task")
+async def dispatch_task(task: Dict[str, Any]):
+    from fog.core.engine import orchestration_engine
+    from fog.models.task import TaskPacket
+    try:
+        task_packet = TaskPacket(**task)
+        await orchestration_engine.submit_task(task_packet)
+        return {"status": "success", "task_id": task_packet.task_id}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))

@@ -34,6 +34,10 @@ def main():
     rollback_parser = subparsers.add_parser("rollback", help="Trigger manual rollback")
     rollback_parser.add_argument("backup_id", help="ID of the backup to rollback to")
 
+    # Task Dispatch
+    dispatch_parser = subparsers.add_parser("dispatch", help="Manually dispatch a task")
+    dispatch_parser.add_argument("task_file", help="Path to JSON file containing the task packet")
+
     args = parser.parse_args()
     control = HumanControlInterface()
 
@@ -83,6 +87,19 @@ def main():
             print(f"Successfully rolled back to {args.backup_id}")
         except Exception as e:
             print(f"Error during rollback: {e}")
+
+    elif args.command == "dispatch":
+        import asyncio
+        from fog.core.engine import orchestration_engine
+        from fog.models.task import TaskPacket
+        try:
+            with open(args.task_file, 'r') as f:
+                task_data = json.load(f)
+            task_packet = TaskPacket(**task_data)
+            asyncio.run(orchestration_engine.submit_task(task_packet))
+            print(f"Task {task_packet.task_id} dispatched.")
+        except Exception as e:
+            print(f"Error dispatching task: {e}")
 
     elif not args.command:
         parser.print_help()
