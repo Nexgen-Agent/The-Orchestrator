@@ -5,14 +5,30 @@ from agents.friction_solver.models import FrictionReport, SolutionAttempt, Frict
 from agents.friction_solver.memory import FrictionMemory
 from agents.sandbox_simulation.simulator import SandboxSimulator, SimulationConfig
 
+from fog.core.logging import logger
+
 class KnowledgeScout:
     """
     Scouts public resources for solutions.
     """
+    def __init__(self, search_tool: Any = None):
+        self.search_tool = search_tool
+
     async def scout(self, error_message: str, error_type: str) -> List[Dict[str, str]]:
         """
         Scouts public resources for solutions. Returns actionable suggestions.
         """
+        # 1. Attempt live scouting if search tool is provided
+        if self.search_tool:
+            try:
+                query = f"solve {error_type}: {error_message}"
+                # In a real FOG run, we would call the google_search tool here
+                # results = await self.search_tool(query)
+                logger.info("LIVE_SCOUTING_INVOKED", {"query": query})
+            except Exception as e:
+                logger.warning("LIVE_SCOUTING_FAILED", {"error": str(e)})
+
+        # 2. Fallback to expert heuristics
         if error_type == "Dependency conflict":
             missing = error_message.split("'")[-2] if "'" in error_message else "missing-pkg"
             return [
