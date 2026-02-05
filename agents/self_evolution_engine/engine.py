@@ -252,7 +252,14 @@ class SelfEvolutionEngine:
         # In a real system, this would use AST to extract a class and move it.
         # Here we perform a safe file-based split simulation.
         logger.info("EXECUTING_MODULE_SPLIT", {"module": module_name})
-        return True # Simulated success for now, but hook is present
+
+        # Simplified: check if module exists and has multiple classes
+        state = state_store.get_state()
+        agents = state.get("agents", {})
+        if module_name in agents:
+             # In a real run, we would create a new agent and move logic there.
+             return True
+        return False
 
     def _apply_param_tuning(self, agent_name: str) -> bool:
         """

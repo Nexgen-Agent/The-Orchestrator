@@ -37,7 +37,7 @@ class KnowledgeScout:
             ]
         elif error_type == "Code error":
             return [
-                {"description": "Check for syntax errors", "action": "python3 -m py_compile *.py"}
+                {"description": "Check for syntax errors", "action": "python3 -m py_compile main.py"}
             ]
         elif error_type == "Security restriction":
             return [
@@ -105,25 +105,38 @@ class FrictionSolver:
     async def _apply_fix(self, action: str, project_path: str) -> bool:
         """
         Actually applies the fix using a safe subprocess call.
+        Uses create_subprocess_exec to avoid shell injection.
         """
         if not action:
             return False
 
-        # Security check: only allow certain commands for auto-apply
-        allowed_prefixes = ["pip install", "echo", "python3 -m py_compile", "chmod", "ls", "tail"]
-        if not any(action.startswith(prefix) for prefix in allowed_prefixes):
+        parts = action.split()
+        cmd = parts[0]
+        args = parts[1:]
+
+        # Whitelist allowed commands and sanitize
+        allowed_commands = ["pip", "python3", "chmod", "ls", "tail", "echo"]
+        if cmd not in allowed_commands:
+            logger.warning("UNAUTHORIZED_COMMAND_ATTEMPT", {"command": cmd})
+            return False
+
+        # Additional safety for specific commands
+        if cmd == "pip" and (not args or args[0] != "install"):
             return False
 
         try:
-            process = await asyncio.create_subprocess_shell(
-                action,
+            # Use exec instead of shell for safety
+            process = await asyncio.create_subprocess_exec(
+                cmd,
+                *args,
                 cwd=project_path,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE
             )
             await process.communicate()
             return process.returncode == 0
-        except Exception:
+        except Exception as e:
+            logger.error("FIX_APPLICATION_FAILED", {"error": str(e)})
             return False
 
     def _classify_error(self, error_message: str) -> str:

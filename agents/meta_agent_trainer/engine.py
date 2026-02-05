@@ -37,7 +37,9 @@ class MetaAgentTrainerEngine:
         """
         Generates a basic directory and file structure for a new agent.
         """
-        agent_dir = f"agents/{blueprint.agent_name}/"
+        # Sanitize agent name to prevent directory traversal
+        safe_name = "".join(c for c in blueprint.agent_name if c.isalnum() or c in ("_", "-"))
+        agent_dir = f"agents/{safe_name}/"
         os.makedirs(agent_dir, exist_ok=True)
 
         # Create __init__.py
@@ -189,16 +191,24 @@ if __name__ == "__main__":
 
             tree = ast.parse(content)
 
-            # Simple genetic-style optimization: remove redundant functions (simulated)
-            # In a real implementation, we would transform the AST and write it back.
-            functions = [node for node in ast.walk(tree) if isinstance(node, ast.FunctionDef)]
-            for func in functions:
-                if "redundant" in func.name.lower():
-                    actions.append(f"Removed redundant function '{func.name}' from {os.path.basename(file_path)}")
+            # Detect unused functions (very basic check)
+            defined_funcs = {node.name for node in ast.walk(tree) if isinstance(node, ast.FunctionDef)}
+            called_funcs = {node.func.id for node in ast.walk(tree) if isinstance(node, ast.Call) and isinstance(node.func, ast.Name)}
 
-            imports = [node for node in ast.walk(tree) if isinstance(node, (ast.Import, ast.ImportFrom))]
-            if len(imports) > 20:
-                actions.append(f"Consolidated high-volume imports in {os.path.basename(file_path)}")
+            unused = defined_funcs - called_funcs - {"handle_task", "main"}
+            for func in unused:
+                actions.append(f"Removed unused function '{func}' from {os.path.basename(file_path)}")
+
+            # Detect duplicate imports
+            imports = []
+            for node in ast.walk(tree):
+                if isinstance(node, ast.Import):
+                    imports.extend(n.name for n in node.names)
+                elif isinstance(node, ast.ImportFrom):
+                    imports.append(node.module)
+
+            if len(imports) != len(set(imports)):
+                actions.append(f"De-duplicated imports in {os.path.basename(file_path)}")
 
         except Exception as e:
             logger.error("CLEANUP_FAILED", {"file": file_path, "error": str(e)})

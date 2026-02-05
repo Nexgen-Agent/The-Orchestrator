@@ -12,6 +12,7 @@ def main():
         print("  friction-solve [args]           - Technical friction solver agent")
         print("  self-evolve [args]              - Autonomous system evolution engine")
         print("  mate [args]                     - Meta-Agent Trainer Engine (MATE)")
+        print("  shooting-star-intel [args]      - Shooting Star Intelligence Layer")
         sys.exit(1)
 
     command = sys.argv[1]
@@ -44,6 +45,14 @@ def main():
     elif command == "mate":
         root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
         agent_path = os.path.join(root_dir, "agents", "meta_agent_trainer", "main.py")
+        cmd = [sys.executable, agent_path] + args
+        try:
+            subprocess.run(cmd, check=True)
+        except subprocess.CalledProcessError as e:
+            sys.exit(e.returncode)
+    elif command == "shooting-star-intel":
+        root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+        agent_path = os.path.join(root_dir, "agents", "shooting_star_intelligence", "main.py")
         cmd = [sys.executable, agent_path] + args
         try:
             subprocess.run(cmd, check=True)
