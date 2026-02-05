@@ -4,6 +4,8 @@ import time
 from typing import List, Dict, Any, Optional
 from datetime import datetime, timezone
 from agents.software_builder.models import BuildReport, BuildRequest, ModuleBuildInfo, BuildStep
+from agents.friction_solver.solver import FrictionSolver
+from agents.friction_solver.models import FrictionSolverConfig
 from fog.core.mapper import DependencyMapper
 from fog.core.backup import backup_manager
 from fog.core.logging import logger
@@ -87,33 +89,48 @@ class SoftwareBuilder:
             dependencies=info["imports"]
         )
 
-        # 1. Analyze Step
-        analyze_step = BuildStep(module_name=module_name, action="analyze", status="InProgress")
-        module_report.build_steps.append(analyze_step)
-        # Simulate analysis
-        await asyncio.sleep(0.1)
-        analyze_step.status = "Completed"
-        analyze_step.logs.append(f"Successfully analyzed {module_name}")
+        try:
+            # 1. Analyze Step
+            analyze_step = BuildStep(module_name=module_name, action="analyze", status="InProgress")
+            module_report.build_steps.append(analyze_step)
+            # Simulate analysis
+            await asyncio.sleep(0.1)
+            analyze_step.status = "Completed"
+            analyze_step.logs.append(f"Successfully analyzed {module_name}")
 
-        # 2. Iterative Improvement Loop
-        for i in range(1, max_iterations + 1):
-            module_report.total_iterations = i
-            improve_step = BuildStep(module_name=module_name, action="improve", status="InProgress", iterations=i)
-            module_report.build_steps.append(improve_step)
+            # 2. Iterative Improvement Loop
+            for i in range(1, max_iterations + 1):
+                module_report.total_iterations = i
+                improve_step = BuildStep(module_name=module_name, action="improve", status="InProgress", iterations=i)
+                module_report.build_steps.append(improve_step)
 
-            # Simulate improvement work
-            await asyncio.sleep(0.2)
+                # Simulate improvement work
+                await asyncio.sleep(0.2)
 
-            # Integration with backup would happen here before any write
-            # For now, we simulate safe execution
-            improve_step.status = "Completed"
-            improve_step.logs.append(f"Iteration {i}: Applied logical optimizations and refined docstrings.")
+                # Integration with backup would happen here before any write
+                # For now, we simulate safe execution
+                improve_step.status = "Completed"
+                improve_step.logs.append(f"Iteration {i}: Applied logical optimizations and refined docstrings.")
 
-        # 3. Verification Step
-        verify_step = BuildStep(module_name=module_name, action="verify", status="InProgress")
-        module_report.build_steps.append(verify_step)
-        await asyncio.sleep(0.1)
-        verify_step.status = "Completed"
+            # 3. Verification Step
+            verify_step = BuildStep(module_name=module_name, action="verify", status="InProgress")
+            module_report.build_steps.append(verify_step)
+            await asyncio.sleep(0.1)
+            verify_step.status = "Completed"
 
-        module_report.status = "Completed"
+            module_report.status = "Completed"
+        except Exception as e:
+            module_report.status = "Failed"
+            logger.error("MODULE_BUILD_FAILED", {"module": module_name, "error": str(e)})
+
+            # Friction Solver Integration
+            solver = FrictionSolver()
+            config = FrictionSolverConfig(
+                project_path=self.project_path,
+                error_message=str(e),
+                context_logs=f"Build failed for module {module_name}"
+            )
+            report = await solver.solve(config)
+            self.report.friction_reports.append(report.model_dump(mode='json'))
+
         return module_report

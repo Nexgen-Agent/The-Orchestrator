@@ -30,6 +30,7 @@ class BuildReport(BaseModel):
     completed_modules: int = 0
     failed_modules: int = 0
     performance_metrics: Dict[str, Any] = {}
+    friction_reports: List[Dict[str, Any]] = []
     summary: str = ""
 
 class BuildRequest(BaseModel):

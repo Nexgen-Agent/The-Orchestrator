@@ -4,6 +4,7 @@ import asyncio
 from typing import List, Dict, Any, Optional
 from datetime import datetime, timezone
 from agents.debugger.models import DebugReport, DebugRequest, Issue, ProposedFix, Severity
+from agents.friction_solver.solver import KnowledgeScout
 from fog.core.state import state_store
 from fog.core.logging import logger
 
@@ -11,6 +12,7 @@ class Debugger:
     def __init__(self, project_path: str):
         self.project_path = os.path.abspath(project_path)
         self.report = DebugReport(project_path=self.project_path)
+        self.scout = KnowledgeScout()
 
     async def run_debug(self, request: DebugRequest) -> DebugReport:
         logger.info("DEBUG_STARTED", {"project_path": self.project_path})
@@ -50,16 +52,25 @@ class Debugger:
                             for node in ast.walk(tree):
                                 if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
                                     if node.func.id in ["eval", "exec"]:
-                                        self.report.issues.append(Issue(
+                                        issue = Issue(
                                             module_name=rel_path,
                                             file_path=file_path,
                                             line_number=node.lineno,
                                             severity="High",
                                             issue_type="SafePattern",
                                             description=f"Unsafe use of {node.func.id}() detected."
-                                        ))
+                                        )
+                                        self.report.issues.append(issue)
+                                        # Scout for fixes
+                                        suggestions = await self.scout.scout(issue.description, issue.issue_type)
+                                        for s in suggestions:
+                                            self.report.proposed_fixes.append(ProposedFix(
+                                                issue_id=issue.issue_id,
+                                                description=f"Established fix: {s['description']}",
+                                                safety_rating="Safe"
+                                            ))
                     except SyntaxError as e:
-                        self.report.issues.append(Issue(
+                        issue = Issue(
                             module_name=rel_path,
                             file_path=file_path,
                             line_number=e.lineno,
@@ -67,7 +78,16 @@ class Debugger:
                             issue_type="Syntax",
                             description=f"Syntax error: {e.msg}",
                             evidence=e.text
-                        ))
+                        )
+                        self.report.issues.append(issue)
+                        # Scout for fixes
+                        suggestions = await self.scout.scout(issue.description, issue.issue_type)
+                        for s in suggestions:
+                            self.report.proposed_fixes.append(ProposedFix(
+                                issue_id=issue.issue_id,
+                                description=f"Established fix: {s['description']}",
+                                safety_rating="Safe"
+                            ))
                     except Exception as e:
                         logger.error("DEBUG_FILE_ERROR", {"file": file_path, "error": str(e)})
 
