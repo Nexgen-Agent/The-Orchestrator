@@ -10,6 +10,10 @@ from agents.learning_feedback.api import router as learning_router
 from agents.visualization.api import router as visualization_router
 from agents.software_builder.api import router as builder_router
 from agents.debugger.api import router as debugger_router
+from agents.friction_solver.api import router as friction_router
+from agents.self_evolution_engine.api import router as evolution_router
+from agents.meta_agent_trainer.api import router as mate_router
+from agents.shooting_star_intelligence.api import router as intel_router
 from fog.core.engine import orchestration_engine
 import asyncio
 from contextlib import asynccontextmanager
@@ -36,6 +40,10 @@ app.include_router(learning_router)
 app.include_router(visualization_router)
 app.include_router(builder_router)
 app.include_router(debugger_router)
+app.include_router(friction_router)
+app.include_router(evolution_router)
+app.include_router(mate_router)
+app.include_router(intel_router)
 
 # Static files for frontend
 app.mount("/static", StaticFiles(directory="fog/frontend"), name="static")
