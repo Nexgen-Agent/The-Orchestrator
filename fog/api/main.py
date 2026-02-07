@@ -24,6 +24,19 @@ import os
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # Re-register agents from state store
+    from fog.core.state import state_store
+    from fog.core.connector import agent_registry, HttpAgentConnector, MockAgentConnector
+
+    agents = state_store.get_agents()
+    for name, config in agents.items():
+        if config.get("handler_type") == "mock":
+            connector = MockAgentConnector(name, config["endpoint"])
+        else:
+            connector = HttpAgentConnector(name, config["endpoint"])
+        agent_registry.register_agent(connector)
+        print(f"Re-registered agent: {name}")
+
     await orchestration_engine.start()
     yield
     await orchestration_engine.stop()
