@@ -13,6 +13,12 @@ async def run_analysis(feed_to_evolution: bool = True):
         agent.feed_to_evolution_coordinator(report)
     return report
 
+@router.post("/trigger", response_model=FeedbackReport)
+async def trigger_learning():
+    report = agent.analyze_performance()
+    agent.feed_to_evolution_coordinator(report)
+    return report
+
 @router.get("/memory", response_model=LearningMemory)
 async def get_memory():
     return agent.memory

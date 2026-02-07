@@ -273,16 +273,75 @@ class FogDashboard {
     }
 
     async triggerBuild() {
-        const path = prompt("Enter project path for build:");
+        const input = document.getElementById('builder-path');
+        const path = input ? input.value : prompt("Enter project path for build:");
         if (path) {
-            await API.runBuild(path);
-            alert("Build Triggered");
+            try {
+                await API.runBuild(path);
+                alert("Build Triggered");
+            } catch (err) {
+                alert(`Build failed to start: ${err.message}`);
+            }
+        }
+    }
+
+    async triggerDeployment() {
+        const input = document.getElementById('deploy-path');
+        const path = input ? input.value : prompt("Enter project path for deployment:");
+        if (path) {
+            try {
+                // Assuming API has runDeployment or similar, or we use submitTask
+                await API.post('/deployment/run', { project_path: path });
+                alert("Deployment Triggered");
+            } catch (err) {
+                alert(`Deployment failed to start: ${err.message}`);
+            }
+        }
+    }
+
+    async triggerLearningCycle() {
+        try {
+            await API.post('/learning/trigger');
+            alert("Learning Cycle Initiated");
+        } catch (err) {
+            alert(`Failed to trigger learning: ${err.message}`);
         }
     }
 
     async checkResilience() {
         await API.runResilienceCheck();
         alert("Resilience Check Initiated");
+    }
+
+    showDispatchModal() {
+        document.getElementById('dispatch-modal')?.classList.remove('hidden');
+    }
+
+    hideDispatchModal() {
+        document.getElementById('dispatch-modal')?.classList.add('hidden');
+    }
+
+    async handleDispatch() {
+        const type = document.getElementById('dispatch-type').value;
+        const desc = document.getElementById('dispatch-desc').value;
+
+        if (!desc) {
+            alert("Please enter a description");
+            return;
+        }
+
+        try {
+            await API.submitTask({
+                task_type: type,
+                description: desc,
+                system_name: "Manual Dispatch"
+            });
+            this.hideDispatchModal();
+            this.updateData();
+            alert("Task Dispatched successfully");
+        } catch (err) {
+            alert(`Dispatch failed: ${err.message}`);
+        }
     }
 }
 
