@@ -41,19 +41,42 @@ class FogDashboard {
 
     async updateData() {
         try {
+            console.log("Fetching system state...");
             const state = await API.getSystemState();
+            console.log("System state received:", state);
             this.tasks = state.tasks || {};
             this.agents = state.agents || {};
             this.isPaused = state.controls?.is_paused || false;
 
-            this.approvals = await API.getPendingApprovals();
-            this.systemHealth = await API.getSystemHealth();
-            this.agentToggles = await API.getAgentToggles();
+            try {
+                this.approvals = await API.getPendingApprovals();
+            } catch (e) { console.warn("Failed to fetch approvals", e); }
+
+            try {
+                this.systemHealth = await API.getSystemHealth();
+            } catch (e) { console.warn("Failed to fetch system health", e); }
+
+            try {
+                this.agentToggles = await API.getAgentToggles();
+            } catch (e) { console.warn("Failed to fetch agent toggles", e); }
 
             this.render();
             this.checkApprovals();
         } catch (err) {
-            console.error("Data update failed", err);
+            console.error("Critical data update failure:", err);
+            this.showError(`Critical system failure: ${err.message}`);
+            // Even if critical update fails, we should try to render what we have
+            this.render();
+        }
+    }
+
+    showError(msg) {
+        const errEl = document.getElementById('global-error');
+        const errMsg = document.getElementById('error-message');
+        if (errEl && errMsg) {
+            errMsg.innerText = msg;
+            errEl.classList.remove('hidden');
+            setTimeout(() => errEl.classList.add('hidden'), 5000);
         }
     }
 
@@ -107,8 +130,10 @@ class FogDashboard {
 
     renderAgents() {
         const grid = document.getElementById('agents-grid');
+        const select = document.getElementById('target-agent');
         if (!grid) return;
 
+        console.log("Rendering agents:", this.agents);
         grid.innerHTML = Object.entries(this.agents).map(([name, config]) => {
             const isEnabled = this.agentToggles && this.agentToggles[name] !== false;
             return `
@@ -134,6 +159,12 @@ class FogDashboard {
                 </div>
             `;
         }).join('');
+
+        if (select) {
+            const currentVal = select.value;
+            select.innerHTML = '<option value="">Select Agent...</option>' +
+                Object.keys(this.agents).map(name => `<option value="${name}" ${name === currentVal ? 'selected' : ''}>${name}</option>`).join('');
+        }
     }
 
     renderSystemHealth() {
@@ -313,6 +344,53 @@ class FogDashboard {
         alert("Resilience Check Initiated");
     }
 
+    async runAgentCommand() {
+        const agentName = document.getElementById('target-agent').value;
+        const prompt = document.getElementById('agent-prompt').value;
+        const projectPath = document.getElementById('agent-project-path')?.value;
+
+        if (!agentName || !prompt) {
+            alert("Please select an agent and enter a prompt.");
+            return;
+        }
+
+        this.logToConsole(`Sending command to ${agentName}: ${prompt.slice(0, 50)}${prompt.length > 50 ? '...' : ''}`);
+
+        try {
+            const taskType = projectPath ? 'modification' : 'analysis';
+            const payload = { prompt: prompt };
+            if (projectPath) payload.project_path = projectPath;
+
+            const response = await API.submitTask({
+                task_id: `cmd-${Date.now()}`,
+                task_type: taskType,
+                module_name: 'core',
+                payload: payload,
+                system_name: agentName,
+                timestamp: new Date().toISOString()
+            });
+            this.logToConsole(`Task dispatched. ID: ${response.task_id}`, 'success');
+            this.updateData();
+        } catch (err) {
+            this.logToConsole(`Error: ${err.message}`, 'error');
+        }
+    }
+
+    stopAgentCommand() {
+        this.logToConsole("Stop command issued (Not fully implemented on backend yet)", "warning");
+    }
+
+    logToConsole(msg, type = 'info') {
+        const output = document.getElementById('console-output');
+        if (!output) return;
+
+        const p = document.createElement('p');
+        p.className = type === 'error' ? 'text-red-400' : type === 'success' ? 'text-green-400' : type === 'warning' ? 'text-yellow-400' : 'text-teal-400/80';
+        p.innerHTML = `<span class="text-white/20 mr-2">${new Date().toLocaleTimeString()}</span> > ${msg}`;
+        output.appendChild(p);
+        output.scrollTop = output.scrollHeight;
+    }
+
     showDispatchModal() {
         document.getElementById('dispatch-modal')?.classList.remove('hidden');
     }
@@ -324,16 +402,26 @@ class FogDashboard {
     async handleDispatch() {
         const type = document.getElementById('dispatch-type').value;
         const desc = document.getElementById('dispatch-desc').value;
+        const path = document.getElementById('dispatch-path').value;
 
         if (!desc) {
             alert("Please enter a description");
             return;
         }
 
+        if (type === 'MODIFICATION' && !path) {
+            alert("Project path is required for modification tasks.");
+            return;
+        }
+
         try {
+            const payload = { description: desc };
+            if (path) payload.project_path = path;
+
             await API.submitTask({
-                task_type: type,
-                description: desc,
+                task_type: type.toLowerCase(),
+                module_name: 'manual',
+                payload: payload,
                 system_name: "Manual Dispatch"
             });
             this.hideDispatchModal();

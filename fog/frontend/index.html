@@ -36,6 +36,15 @@
             </div>
         </header>
 
+        <!-- Global Error Notification -->
+        <div id="global-error" class="hidden sticky top-[72px] z-[45] bg-red-500/80 backdrop-blur-md text-white px-6 py-2 text-xs font-medium flex justify-between items-center transition-all duration-300">
+            <div class="flex items-center">
+                <i class="fas fa-exclamation-triangle mr-2"></i>
+                <span id="error-message">Connection failure detected.</span>
+            </div>
+            <button onclick="document.getElementById('global-error').classList.add('hidden')"><i class="fas fa-times"></i></button>
+        </div>
+
         <!-- Navigation Bar (Vertical for Mobile) -->
         <nav id="sidebar" class="fixed left-0 top-0 h-full w-20 bg-white/5 border-r border-white/10 backdrop-blur-xl z-40 hidden md:flex flex-col items-center py-20 space-y-8">
             <button class="nav-item active text-white/80 hover:text-teal-400 transition-colors" data-view="overview"><i class="fas fa-th-large text-xl"></i></button>
@@ -114,9 +123,35 @@
                 </div>
 
                 <!-- View placeholders for other sections -->
-                <div id="agents-view" class="view hidden">
+                <div id="agents-view" class="view hidden space-y-8">
                     <h2 class="text-2xl font-bold mb-6">Agent Control Center</h2>
                     <div id="agents-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+
+                    <!-- Interaction Area -->
+                    <div id="agent-interaction" class="glass-card p-6 space-y-4">
+                        <h3 class="text-sm font-semibold uppercase tracking-widest text-white/40">Direct Command</h3>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <select id="target-agent" class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-sm focus:border-teal-500/50 outline-none">
+                                    <option value="">Select Agent...</option>
+                                </select>
+                                <input type="text" id="agent-project-path" placeholder="Project Path (Optional)" class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-sm focus:border-teal-500/50 outline-none">
+                            </div>
+                            <textarea id="agent-prompt" rows="4" placeholder="Enter prompt or command..." class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-sm focus:border-teal-500/50 outline-none"></textarea>
+                            <div class="flex space-x-4">
+                                <button onclick="app.runAgentCommand()" class="flex-grow py-3 bg-teal-500 rounded-xl font-bold shadow-lg shadow-teal-500/20">Execute</button>
+                                <button onclick="app.stopAgentCommand()" class="px-6 py-3 border border-white/10 rounded-xl font-medium hover:bg-white/5 transition-colors">Stop</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Output Console -->
+                    <div class="glass-card p-6 flex flex-col h-64">
+                        <h3 class="text-sm font-semibold uppercase tracking-widest text-white/40 mb-4">Output Console</h3>
+                        <div id="console-output" class="flex-grow bg-black/40 rounded-xl p-4 font-mono text-xs overflow-y-auto space-y-2 text-teal-400/80">
+                            <p class="text-white/20 italic">> Waiting for command...</p>
+                        </div>
+                    </div>
                 </div>
 
                 <div id="tasks-view" class="view hidden">
@@ -203,6 +238,10 @@
                     <div>
                         <label class="text-xs font-semibold uppercase tracking-widest text-white/40">Description</label>
                         <textarea id="dispatch-desc" rows="3" placeholder="Task description..." class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-sm focus:border-teal-500/50 outline-none mt-1"></textarea>
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold uppercase tracking-widest text-white/40">Project Path (Required for Modification)</label>
+                        <input type="text" id="dispatch-path" placeholder="/path/to/project" class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-sm focus:border-teal-500/50 outline-none mt-1">
                     </div>
                 </div>
                 <button onclick="app.handleDispatch()" class="w-full py-3 bg-teal-500 rounded-xl font-bold shadow-lg shadow-teal-500/20">Dispatch Task</button>
