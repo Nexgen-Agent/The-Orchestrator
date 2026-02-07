@@ -17,6 +17,7 @@ class FogDashboard {
         this.setupEventListeners();
         this.startPolling();
         this.render();
+        this.appendMessage('orchestrator', 'System initialized. I am the FOG Orchestrator. How can I assist you today?', 'Orchestrator');
     }
 
     setupEventListeners() {
@@ -345,22 +346,37 @@ class FogDashboard {
 
         try {
             const response = await API.sendChat(prompt);
-            this.logToConsole(`Orchestrator routed to ${response.agent_assigned}. Task ID: ${response.task_id}`, 'success');
 
-            // Add orchestrator acknowledgment
-            this.appendMessage('orchestrator', response.message, response.agent_assigned);
+            if (response.status === 'completed') {
+                this.showTyping(false);
+                this.appendMessage('orchestrator', response.message, response.agent_assigned);
+                this.logToConsole(`Orchestrator provided direct answer.`, 'success');
 
-            // Update routing context UI
-            const agentTag = document.getElementById('current-agent-tag');
-            const taskStatus = document.getElementById('current-task-status');
-            if (agentTag) agentTag.innerText = response.agent_assigned.toUpperCase();
-            if (taskStatus) {
-                taskStatus.innerText = 'RUNNING';
-                taskStatus.className = 'text-[10px] font-bold text-teal-400';
+                const agentTag = document.getElementById('current-agent-tag');
+                const taskStatus = document.getElementById('current-task-status');
+                if (agentTag) agentTag.innerText = 'ORCHESTRATOR';
+                if (taskStatus) {
+                    taskStatus.innerText = 'COMPLETED';
+                    taskStatus.className = 'text-[10px] font-bold text-white/40';
+                }
+            } else {
+                this.logToConsole(`Orchestrator routed to ${response.agent_assigned}. Task ID: ${response.task_id}`, 'success');
+
+                // Add orchestrator acknowledgment
+                this.appendMessage('orchestrator', response.message, response.agent_assigned);
+
+                // Update routing context UI
+                const agentTag = document.getElementById('current-agent-tag');
+                const taskStatus = document.getElementById('current-task-status');
+                if (agentTag) agentTag.innerText = response.agent_assigned.toUpperCase();
+                if (taskStatus) {
+                    taskStatus.innerText = 'RUNNING';
+                    taskStatus.className = 'text-[10px] font-bold text-teal-400';
+                }
+
+                // Start polling for this specific task
+                this.pollTaskResult(response.task_id);
             }
-
-            // Start polling for this specific task
-            this.pollTaskResult(response.task_id);
 
         } catch (err) {
             this.showTyping(false);
@@ -381,9 +397,16 @@ class FogDashboard {
             ? 'bg-teal-500 text-white rounded-2xl rounded-tr-none p-4 shadow-lg shadow-teal-500/10'
             : 'bg-white/5 text-white rounded-2xl rounded-tl-none p-4 border border-white/10 shadow-xl';
 
+        // Simple Markdown-to-HTML (Links and Bold)
+        let processedText = text
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/### (.*?)\n/g, '<h3 class="font-bold text-teal-400 mt-2">$1</h3>')
+            .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" class="text-teal-400 underline hover:text-teal-300 transition-colors">$1</a>')
+            .replace(/\n/g, '<br>');
+
         msgDiv.innerHTML = `
             <div class="max-w-[85%] ${contentClass}">
-                <p class="text-sm leading-relaxed">${text}</p>
+                <div class="text-sm leading-relaxed">${processedText}</div>
                 <div class="flex items-center mt-3 pt-3 border-t ${isUser ? 'border-white/20' : 'border-white/5'}">
                     ${!isUser ? `
                         <div class="w-4 h-4 rounded-full bg-teal-500/20 flex items-center justify-center mr-2">
