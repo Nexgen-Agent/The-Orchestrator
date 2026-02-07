@@ -124,32 +124,96 @@
 
                 <!-- View placeholders for other sections -->
                 <div id="agents-view" class="view hidden space-y-8">
-                    <h2 class="text-2xl font-bold mb-6">Agent Control Center</h2>
-                    <div id="agents-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+                    <h2 class="text-2xl font-bold mb-6">Orchestrator Control Center</h2>
 
-                    <!-- Interaction Area -->
-                    <div id="agent-interaction" class="glass-card p-6 space-y-4">
-                        <h3 class="text-sm font-semibold uppercase tracking-widest text-white/40">Direct Command</h3>
-                        <div class="space-y-4">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <select id="target-agent" class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-sm focus:border-teal-500/50 outline-none">
-                                    <option value="">Select Agent...</option>
-                                </select>
-                                <input type="text" id="agent-project-path" placeholder="Project Path (Optional)" class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-sm focus:border-teal-500/50 outline-none">
-                            </div>
-                            <textarea id="agent-prompt" rows="4" placeholder="Enter prompt or command..." class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-sm focus:border-teal-500/50 outline-none"></textarea>
-                            <div class="flex space-x-4">
-                                <button onclick="app.runAgentCommand()" class="flex-grow py-3 bg-teal-500 rounded-xl font-bold shadow-lg shadow-teal-500/20">Execute</button>
-                                <button onclick="app.stopAgentCommand()" class="px-6 py-3 border border-white/10 rounded-xl font-medium hover:bg-white/5 transition-colors">Stop</button>
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Left: Chat Interface -->
+                        <div class="lg:col-span-2 space-y-6">
+                            <div id="chat-interface" class="glass-card flex flex-col h-[600px] overflow-hidden">
+                                <div class="px-6 py-4 border-b border-white/10 flex justify-between items-center bg-white/5">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-10 h-10 rounded-xl bg-teal-500/10 flex items-center justify-center">
+                                            <i class="fas fa-brain text-teal-400"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="text-sm font-bold">FOG Orchestrator</h3>
+                                            <p class="text-[10px] text-white/40 uppercase tracking-widest">Autonomous Intelligence</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <div class="w-2 h-2 bg-teal-400 rounded-full animate-pulse"></div>
+                                        <span class="text-[10px] text-teal-400 font-bold uppercase">System Active</span>
+                                    </div>
+                                </div>
+
+                                <div id="chat-conversation" class="flex-grow overflow-y-auto p-6 space-y-6 no-scrollbar bg-black/20">
+                                    <!-- Messages will be injected here -->
+                                    <div class="flex justify-start">
+                                        <div class="max-w-[85%] bg-white/5 rounded-2xl p-4 border border-white/10 shadow-xl">
+                                            <p class="text-sm leading-relaxed">System initialized. I am the FOG Orchestrator. You can issue commands directly here, and I will route them to the specialized agents in the ecosystem. How can I assist you?</p>
+                                            <div class="flex items-center mt-3 pt-3 border-t border-white/5">
+                                                <div class="w-4 h-4 rounded-full bg-teal-500/20 flex items-center justify-center mr-2">
+                                                    <i class="fas fa-robot text-[8px] text-teal-400"></i>
+                                                </div>
+                                                <p class="text-[9px] text-white/20 uppercase font-bold tracking-tighter">Orchestrator • Online</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="p-4 bg-black/40 border-t border-white/10">
+                                    <div class="relative group">
+                                        <textarea id="chat-input" rows="1" onkeydown="if(event.keyCode===13 && !event.shiftKey){event.preventDefault(); app.sendChatMessage();}" placeholder="Type a command (e.g., 'Analyze the current system health')..." class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-4 pr-16 text-sm focus:border-teal-500/50 outline-none resize-none transition-all group-focus-within:bg-white/10"></textarea>
+                                        <button onclick="app.sendChatMessage()" class="absolute right-2 top-2 bottom-2 w-12 bg-teal-500 rounded-xl flex items-center justify-center shadow-lg shadow-teal-500/20 hover:bg-teal-400 transition-all active:scale-95">
+                                            <i class="fas fa-paper-plane text-xs"></i>
+                                        </button>
+                                    </div>
+                                    <div class="mt-3 flex justify-between items-center px-2">
+                                        <div class="flex items-center space-x-4">
+                                            <p class="text-[10px] text-white/20 italic"><i class="fas fa-info-circle mr-1"></i> Auto-routing enabled</p>
+                                            <div id="chat-typing" class="hidden flex items-center space-x-1">
+                                                <span class="w-1 h-1 bg-teal-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></span>
+                                                <span class="w-1 h-1 bg-teal-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></span>
+                                                <span class="w-1 h-1 bg-teal-400 rounded-full animate-bounce" style="animation-delay: 0.3s"></span>
+                                            </div>
+                                        </div>
+                                        <div class="flex space-x-2">
+                                            <span class="px-2 py-0.5 rounded bg-white/5 text-[9px] text-white/40 border border-white/5 font-mono">ENTER to send</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Output Console -->
-                    <div class="glass-card p-6 flex flex-col h-64">
-                        <h3 class="text-sm font-semibold uppercase tracking-widest text-white/40 mb-4">Output Console</h3>
-                        <div id="console-output" class="flex-grow bg-black/40 rounded-xl p-4 font-mono text-xs overflow-y-auto space-y-2 text-teal-400/80">
-                            <p class="text-white/20 italic">> Waiting for command...</p>
+                        <!-- Right: Context & Agent Status -->
+                        <div class="space-y-6">
+                            <div class="glass-card p-6">
+                                <h3 class="text-xs font-bold uppercase tracking-widest text-white/40 mb-4">Active Routing Context</h3>
+                                <div id="routing-context" class="space-y-3">
+                                    <div class="p-3 bg-white/5 rounded-xl border border-white/5 flex items-center justify-between">
+                                        <span class="text-xs text-white/60">Target Agent</span>
+                                        <span id="current-agent-tag" class="text-[10px] font-bold text-teal-400 bg-teal-400/10 px-2 py-0.5 rounded">AUTO</span>
+                                    </div>
+                                    <div class="p-3 bg-white/5 rounded-xl border border-white/5 flex items-center justify-between">
+                                        <span class="text-xs text-white/60">Task Status</span>
+                                        <span id="current-task-status" class="text-[10px] font-bold text-white/40">IDLE</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="glass-card p-6">
+                                <h3 class="text-xs font-bold uppercase tracking-widest text-white/40 mb-4">Agent Ecosystem</h3>
+                                <div id="agents-mini-list" class="space-y-3">
+                                    <!-- Mini agent list will be injected here -->
+                                </div>
+                            </div>
+
+                            <div class="glass-card p-6 flex flex-col h-48">
+                                <h3 class="text-xs font-bold uppercase tracking-widest text-white/40 mb-4">Execution Stream</h3>
+                                <div id="console-output" class="flex-grow bg-black/40 rounded-xl p-3 font-mono text-[10px] overflow-y-auto space-y-1 text-teal-400/60 no-scrollbar">
+                                    <p class="text-white/20 italic">> System stream active...</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
