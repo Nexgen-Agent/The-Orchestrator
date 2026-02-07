@@ -7,6 +7,8 @@ from fog.core.state import state_store
 import uuid
 from fog.core.logging import logger
 from agents.personality_engine.engine import FingerprintManager, StyleAdaptor
+from fog.core.synthesizer import ChatResponseSynthesizer
+import importlib
 
 class ChatOrchestrator:
     def __init__(self):
@@ -16,14 +18,43 @@ class ChatOrchestrator:
             "DeploymentAutomation": ["deploy", "release", "push", "production", "ship", "deployment"],
             "SystemMonitor": ["status", "health", "how are you", "monitor", "metrics", "stats"],
             "SelfEvolutionEngine": ["improve", "evolve", "optimize", "upgrade", "refactor"],
-            "Debugger": ["debug", "trace", "crash", "log analysis", "inspect"]
+            "Debugger": ["debug", "trace", "crash", "log analysis", "inspect"],
+            "ShootingStarIntelligence": ["ready", "roadmap", "train", "operational", "how far", "learning", "discovery"]
+        }
+        self.intents = {
+            "STATUS_QUERY": ["what is working", "what is not", "health", "system status"],
+            "READINESS_QUERY": ["how far", "operational", "roadmap", "ready", "percentage"],
+            "TRAINING_QUERY": ["train", "faster", "ai agents", "online", "resources", "links"]
         }
         self.personality = FingerprintManager()
 
+    def _detect_intent(self, prompt: str) -> str:
+        prompt_lower = prompt.lower()
+        for intent, keywords in self.intents.items():
+            if any(kw in prompt_lower for kw in keywords):
+                return intent
+        return "GENERAL_TASK"
+
     async def process(self, prompt: str, user_id: str = "default_user") -> Dict[str, Any]:
         """
-        Process a user prompt, route to an agent, and return dispatch info.
+        Process a user prompt, route to an agent, and return dispatch info or full response.
         """
+        intent = self._detect_intent(prompt)
+        profile = self.personality.get_profile(user_id)
+        adaptation = StyleAdaptor.generate_adaptation(profile)
+
+        if intent != "GENERAL_TASK":
+            # Direct response for queries
+            data = await self._handle_query_intent(intent, prompt)
+            message = ChatResponseSynthesizer.synthesize(intent, data, adaptation)
+
+            return {
+                "status": "completed",
+                "task_id": f"query-{uuid.uuid4().hex[:8]}",
+                "agent_assigned": "Orchestrator",
+                "message": message
+            }
+
         # 1. Determine agent
         agent_name = self._route(prompt)
 
@@ -42,9 +73,6 @@ class ChatOrchestrator:
         await orchestration_engine.submit_task(task)
 
         # 4. Generate Personalized Acknowledgment
-        profile = self.personality.get_profile(user_id)
-        adaptation = StyleAdaptor.generate_adaptation(profile)
-
         message = self._generate_message(agent_name, adaptation)
 
         return {
@@ -53,6 +81,32 @@ class ChatOrchestrator:
             "agent_assigned": agent_name,
             "message": message
         }
+
+    async def _handle_query_intent(self, intent: str, prompt: str) -> Dict[str, Any]:
+        """
+        Calls relevant agents synchronously to gather data for a query.
+        """
+        if intent == "STATUS_QUERY":
+            from agents.system_monitor.handler import handle_task as monitor_handler
+            res = await monitor_handler({"payload": {}})
+            return res.get("result", {})
+
+        elif intent == "READINESS_QUERY":
+            from agents.shooting_star_intelligence.handler import handle_task as intel_handler
+            # We don't have a direct "get overall" but we can check the state or trigger an audit
+            # For now, let's use the readiness data from the intelligence class
+            from agents.shooting_star_intelligence.intelligence import ShootingStarIntelligence
+            engine = ShootingStarIntelligence()
+            return engine.readiness.model_dump(mode='json')
+
+        elif intent == "TRAINING_QUERY":
+            from agents.shooting_star_intelligence.intelligence import ShootingStarIntelligence
+            engine = ShootingStarIntelligence()
+            # We'll need to add get_training_recommendations to the engine
+            recs = await engine.get_training_recommendations()
+            return {"training_recommendations": recs}
+
+        return {"message": "I'm not sure how to answer that yet."}
 
     def _generate_message(self, agent_name: str, adaptation: Any) -> str:
         tone = adaptation.target_tone
