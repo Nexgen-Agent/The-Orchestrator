@@ -22,6 +22,7 @@ const API = {
 
     // Core System
     getSystemState() { return this.get('/system-state'); },
+    getSystemHealth() { return this.get('/system-monitor/health'); },
 
     // Human Control Agent
     getPendingApprovals() { return this.get('/human-control/approvals/pending'); },

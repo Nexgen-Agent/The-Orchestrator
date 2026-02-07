@@ -14,6 +14,7 @@ from agents.friction_solver.api import router as friction_router
 from agents.self_evolution_engine.api import router as evolution_router
 from agents.meta_agent_trainer.api import router as mate_router
 from agents.shooting_star_intelligence.api import router as intel_router
+from agents.system_monitor.api import router as monitor_router
 from fog.core.engine import orchestration_engine
 import asyncio
 from contextlib import asynccontextmanager
@@ -44,6 +45,7 @@ app.include_router(friction_router)
 app.include_router(evolution_router)
 app.include_router(mate_router)
 app.include_router(intel_router)
+app.include_router(monitor_router)
 
 # Static files for frontend
 app.mount("/static", StaticFiles(directory="fog/frontend"), name="static")
