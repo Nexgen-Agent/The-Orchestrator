@@ -122,12 +122,50 @@
                 <div id="tasks-view" class="view hidden">
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-2xl font-bold">Task Management</h2>
-                        <button class="px-4 py-2 bg-teal-500 rounded-lg text-sm font-bold shadow-lg shadow-teal-500/20">Manual Dispatch</button>
+                        <button onclick="app.showDispatchModal()" class="px-4 py-2 bg-teal-500 rounded-lg text-sm font-bold shadow-lg shadow-teal-500/20">Manual Dispatch</button>
                     </div>
                     <div id="full-task-list" class="space-y-4"></div>
                 </div>
 
-                <!-- Deployment, Learning, etc. (More complex views would go here) -->
+                <!-- Builder View -->
+                <div id="builder-view" class="view hidden space-y-6">
+                    <h2 class="text-2xl font-bold">Software Builder</h2>
+                    <div class="glass-card p-6">
+                        <p class="text-white/60 mb-4 text-sm">Automated module construction and dependency management.</p>
+                        <div class="space-y-4">
+                            <input type="text" id="builder-path" placeholder="Project Path" class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-sm focus:border-teal-500/50 outline-none">
+                            <button onclick="app.triggerBuild()" class="w-full py-3 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl font-bold shadow-lg shadow-blue-500/20">
+                                <i class="fas fa-hammer mr-2"></i> Execute Build
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Deployment View -->
+                <div id="deployment-view" class="view hidden space-y-6">
+                    <h2 class="text-2xl font-bold">Production Deployment</h2>
+                    <div class="glass-card p-6">
+                        <p class="text-white/60 mb-4 text-sm">Automated Docker builds and service orchestration.</p>
+                        <div class="space-y-4">
+                            <input type="text" id="deploy-path" placeholder="Project Path" class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-sm focus:border-teal-500/50 outline-none">
+                            <button onclick="app.triggerDeployment()" class="w-full py-3 bg-gradient-to-r from-purple-500 to-pink-600 rounded-xl font-bold shadow-lg shadow-purple-500/20">
+                                <i class="fas fa-rocket mr-2"></i> Deploy to Production
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Learning View -->
+                <div id="learning-view" class="view hidden space-y-6">
+                    <h2 class="text-2xl font-bold">Autonomous Learning</h2>
+                    <div class="glass-card p-6">
+                        <p class="text-white/60 mb-4 text-sm">Analyze system performance and optimize orchestration logic.</p>
+                        <button onclick="app.triggerLearningCycle()" class="w-full py-3 bg-gradient-to-r from-teal-500 to-green-600 rounded-xl font-bold shadow-lg shadow-teal-500/20">
+                            <i class="fas fa-brain mr-2"></i> Trigger Learning Cycle
+                        </button>
+                    </div>
+                </div>
+
                 <div id="generic-view" class="view hidden">
                     <div class="h-64 glass-card flex items-center justify-center">
                         <p class="text-white/40 italic">Module under development...</p>
@@ -144,6 +182,32 @@
             <button class="nav-item text-white/40" data-view="deployment"><i class="fas fa-cloud-upload-alt text-lg"></i></button>
             <button class="nav-item text-white/40" data-view="learning"><i class="fas fa-brain text-lg"></i></button>
         </nav>
+
+        <!-- Manual Dispatch Modal -->
+        <div id="dispatch-modal" class="fixed inset-0 z-[100] bg-black/60 backdrop-blur-lg flex items-center justify-center p-6 hidden">
+            <div class="glass-card max-w-lg w-full p-8 space-y-6">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold">Manual Task Dispatch</h2>
+                    <button onclick="app.hideDispatchModal()" class="text-white/40 hover:text-white"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-xs font-semibold uppercase tracking-widest text-white/40">Task Type</label>
+                        <select id="dispatch-type" class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-sm focus:border-teal-500/50 outline-none mt-1">
+                            <option value="ANALYSIS">Analysis</option>
+                            <option value="MODIFICATION">Modification</option>
+                            <option value="DEPLOYMENT">Deployment</option>
+                            <option value="TEST">Test</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold uppercase tracking-widest text-white/40">Description</label>
+                        <textarea id="dispatch-desc" rows="3" placeholder="Task description..." class="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-sm focus:border-teal-500/50 outline-none mt-1"></textarea>
+                    </div>
+                </div>
+                <button onclick="app.handleDispatch()" class="w-full py-3 bg-teal-500 rounded-xl font-bold shadow-lg shadow-teal-500/20">Dispatch Task</button>
+            </div>
+        </div>
 
         <!-- Approval Overlay -->
         <div id="approval-overlay" class="fixed inset-0 z-[100] bg-black/60 backdrop-blur-lg flex items-center justify-center p-6 hidden">
