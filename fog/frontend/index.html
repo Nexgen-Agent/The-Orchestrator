@@ -80,16 +80,16 @@
                                         <span id="worker-load">72%</span>
                                     </div>
                                     <div class="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
-                                        <div class="h-full bg-gradient-to-r from-teal-400 to-blue-500 rounded-full" style="width: 72%"></div>
+                                        <div id="worker-bar" class="h-full bg-gradient-to-r from-teal-400 to-blue-500 rounded-full transition-all duration-500" style="width: 0%"></div>
                                     </div>
                                 </div>
                                 <div>
                                     <div class="flex justify-between text-xs mb-2">
                                         <span class="text-white/60">Memory Usage</span>
-                                        <span id="memory-load">45%</span>
+                                        <span id="memory-load">0%</span>
                                     </div>
                                     <div class="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
-                                        <div class="h-full bg-gradient-to-r from-teal-400 to-blue-500 rounded-full" style="width: 45%"></div>
+                                        <div id="memory-bar" class="h-full bg-gradient-to-r from-teal-400 to-blue-500 rounded-full transition-all duration-500" style="width: 0%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -100,7 +100,7 @@
                     <div>
                         <h3 class="text-sm font-semibold uppercase tracking-widest text-white/40 mb-4">Quick Commands</h3>
                         <div class="flex overflow-x-auto space-x-4 pb-4 no-scrollbar">
-                            <button onclick="app.pauseOrchestration()" class="flex-shrink-0 px-6 py-3 glass-button text-sm font-medium">
+                            <button id="pause-btn" onclick="app.pauseOrchestration()" class="flex-shrink-0 px-6 py-3 glass-button text-sm font-medium">
                                 <i class="fas fa-pause mr-2 text-teal-400"></i> Pause System
                             </button>
                             <button onclick="app.triggerBuild()" class="flex-shrink-0 px-6 py-3 glass-button text-sm font-medium">

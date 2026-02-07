@@ -7,6 +7,8 @@ class FogDashboard {
         this.tasks = {};
         this.agents = {};
         this.approvals = [];
+        this.isPaused = false;
+        this.systemHealth = null;
 
         this.init();
     }
@@ -42,8 +44,11 @@ class FogDashboard {
             const state = await API.getSystemState();
             this.tasks = state.tasks || {};
             this.agents = state.agents || {};
+            this.isPaused = state.controls?.is_paused || false;
 
             this.approvals = await API.getPendingApprovals();
+            this.systemHealth = await API.getSystemHealth();
+            this.agentToggles = await API.getAgentToggles();
 
             this.render();
             this.checkApprovals();
@@ -68,6 +73,7 @@ class FogDashboard {
         this.renderActiveTasks();
         this.renderAgents();
         this.renderFullTaskList();
+        this.renderSystemHealth();
     }
 
     renderActiveTasks() {
@@ -103,26 +109,83 @@ class FogDashboard {
         const grid = document.getElementById('agents-grid');
         if (!grid) return;
 
-        grid.innerHTML = Object.entries(this.agents).map(([name, config]) => `
-            <div class="glass-card p-6 space-y-4">
-                <div class="flex justify-between items-start">
-                    <div class="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center">
-                        <i class="fas fa-robot text-blue-400 text-xl"></i>
+        grid.innerHTML = Object.entries(this.agents).map(([name, config]) => {
+            const isEnabled = this.agentToggles && this.agentToggles[name] !== false;
+            return `
+                <div class="glass-card p-6 space-y-4">
+                    <div class="flex justify-between items-start">
+                        <div class="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center">
+                            <i class="fas fa-robot text-blue-400 text-xl"></i>
+                        </div>
+                        <div class="px-2 py-1 ${isEnabled ? 'bg-teal-500/20 border-teal-500/30' : 'bg-red-500/20 border-red-500/30'} rounded-md border">
+                            <span class="text-[10px] ${isEnabled ? 'text-teal-400' : 'text-red-400'} font-bold uppercase">${isEnabled ? 'Online' : 'Disabled'}</span>
+                        </div>
                     </div>
-                    <div class="px-2 py-1 bg-teal-500/20 rounded-md border border-teal-500/30">
-                        <span class="text-[10px] text-teal-400 font-bold uppercase">Online</span>
+                    <div>
+                        <h3 class="font-bold">${name}</h3>
+                        <p class="text-xs text-white/40 font-mono truncate">${config.endpoint}</p>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button class="flex-grow py-2 bg-white/5 hover:bg-white/10 rounded-xl text-xs transition-colors">Configure</button>
+                        <button onclick="app.toggleAgent('${name}', ${isEnabled})" class="px-4 py-2 ${isEnabled ? 'bg-red-500/20 hover:bg-red-500/40 text-red-400' : 'bg-teal-500/20 hover:bg-teal-500/40 text-teal-400'} rounded-xl text-xs transition-colors">
+                            ${isEnabled ? 'Disable' : 'Enable'}
+                        </button>
                     </div>
                 </div>
-                <div>
-                    <h3 class="font-bold">${name}</h3>
-                    <p class="text-xs text-white/40 font-mono truncate">${config.endpoint}</p>
-                </div>
-                <div class="flex space-x-2">
-                    <button class="flex-grow py-2 bg-white/5 hover:bg-white/10 rounded-xl text-xs transition-colors">Configure</button>
-                    <button onclick="app.toggleAgent('${name}')" class="px-4 py-2 bg-red-500/20 hover:bg-red-500/40 rounded-xl text-xs text-red-400 transition-colors">Disable</button>
-                </div>
-            </div>
-        `).join('');
+            `;
+        }).join('');
+    }
+
+    renderSystemHealth() {
+        if (!this.systemHealth) return;
+
+        // Update load text
+        const workerLoadEl = document.getElementById('worker-load');
+        const memoryLoadEl = document.getElementById('memory-load');
+
+        const workerUsage = Math.round(this.systemHealth.overall_task_metrics.success_rate * 100); // Mocking load from success rate for demo
+        const memoryUsage = 45; // Placeholder or calculate from something
+
+        if (workerLoadEl) workerLoadEl.innerText = `${workerUsage}%`;
+        if (memoryLoadEl) memoryLoadEl.innerText = `${memoryUsage}%`;
+
+        // Update bars
+        const workerBar = document.getElementById('worker-bar');
+        const memoryBar = document.getElementById('memory-bar');
+
+        if (workerBar) workerBar.style.width = `${workerUsage}%`;
+        if (memoryBar) memoryBar.style.width = `${memoryUsage}%`;
+
+        // Update status indicator
+        const statusIndicator = document.getElementById('system-status-indicator');
+        if (statusIndicator) {
+            const statusText = statusIndicator.querySelector('span');
+            const statusDot = statusIndicator.querySelector('div');
+
+            if (statusText) statusText.innerText = this.systemHealth.system_status;
+
+            // Adjust colors based on status
+            if (this.systemHealth.system_status === 'Nominal') {
+                statusIndicator.className = 'flex items-center space-x-2 px-3 py-1 bg-teal-500/20 rounded-full border border-teal-500/30';
+                if (statusDot) statusDot.className = 'w-2 h-2 bg-teal-400 rounded-full animate-pulse shadow-[0_0_8px_#4fd1c5]';
+            } else if (this.systemHealth.system_status === 'Degraded') {
+                statusIndicator.className = 'flex items-center space-x-2 px-3 py-1 bg-yellow-500/20 rounded-full border border-yellow-500/30';
+                if (statusDot) statusDot.className = 'w-2 h-2 bg-yellow-400 rounded-full animate-pulse shadow-[0_0_8px_#ecc94b]';
+            } else {
+                statusIndicator.className = 'flex items-center space-x-2 px-3 py-1 bg-red-500/20 rounded-full border border-red-500/30';
+                if (statusDot) statusDot.className = 'w-2 h-2 bg-red-400 rounded-full animate-pulse shadow-[0_0_8px_#f56565]';
+            }
+        }
+
+        // Update pause button
+        const pauseBtn = document.getElementById('pause-btn');
+        if (pauseBtn) {
+            if (this.isPaused) {
+                pauseBtn.innerHTML = '<i class="fas fa-play mr-2 text-teal-400"></i> Resume System';
+            } else {
+                pauseBtn.innerHTML = '<i class="fas fa-pause mr-2 text-teal-400"></i> Pause System';
+            }
+        }
     }
 
     renderFullTaskList() {
@@ -170,6 +233,15 @@ class FogDashboard {
         }
     }
 
+    async toggleAgent(name, currentEnabled) {
+        try {
+            await API.toggleAgent(name, !currentEnabled);
+            this.updateData();
+        } catch (err) {
+            alert(`Failed to toggle agent: ${err.message}`);
+        }
+    }
+
     async handleApproval(action) {
         if (!this.currentApprovalId) return;
 
@@ -186,8 +258,18 @@ class FogDashboard {
 
     // Command methods
     async pauseOrchestration() {
-        await API.pauseOrchestration();
-        alert("Orchestration Paused");
+        try {
+            if (this.isPaused) {
+                await API.resumeOrchestration();
+                alert("Orchestration Resumed");
+            } else {
+                await API.pauseOrchestration();
+                alert("Orchestration Paused");
+            }
+            this.updateData();
+        } catch (err) {
+            alert(`Failed to toggle orchestration: ${err.message}`);
+        }
     }
 
     async triggerBuild() {
