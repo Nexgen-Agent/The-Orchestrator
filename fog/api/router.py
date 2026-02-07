@@ -5,6 +5,7 @@ from fog.core.engine import orchestration_engine
 from fog.core.state import state_store
 from fog.core.backup import backup_manager
 from fog.core.mapper import DependencyMapper
+from fog.core.orchestrator import chat_orchestrator
 from typing import Dict, Any, List
 import asyncio
 
@@ -69,3 +70,15 @@ async def get_dependency_map(project_path: str):
 @router.get("/system-state")
 async def get_system_state():
     return state_store.get_state()
+
+@router.post("/chat")
+async def chat(message: Dict[str, str]):
+    prompt = message.get("prompt")
+    if not prompt:
+        raise HTTPException(status_code=400, detail="Prompt is required")
+
+    try:
+        response = await chat_orchestrator.process(prompt)
+        return response
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

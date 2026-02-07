@@ -39,6 +39,7 @@ const API = {
     // Tasks
     submitTask(task) { return this.post('/submit-task', task); },
     getTaskStatus(id) { return this.get(`/task-status/${id}`); },
+    sendChat(prompt) { return this.post('/chat', { prompt }); },
 
     // Builder & Debugger
     runBuild(projectPath) { return this.post('/builder/build', { project_path: projectPath }); },

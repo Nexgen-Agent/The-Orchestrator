@@ -11,6 +11,10 @@ async def handle_task(task_packet_dict: Dict[str, Any]) -> Dict[str, Any]:
     payload = task_packet_dict.get("payload", {})
     project_path = payload.get("project_path")
 
+    # Chat interaction support
+    if not project_path:
+        project_path = "."
+
     if not project_path:
         return {"status": "error", "message": "Missing project_path in payload"}
 

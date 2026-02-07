@@ -12,7 +12,14 @@ async def handle_task(task_packet: Dict[str, Any]) -> Dict[str, Any]:
     error_message = payload.get("error_message")
     context_logs = payload.get("context_logs")
 
-    if not project_path or not error_message:
+    # Chat interaction support
+    if payload.get("chat_interaction") and not error_message:
+        error_message = payload.get("prompt")
+
+    if not project_path:
+        project_path = "." # Default to root if missing in chat
+
+    if not error_message:
         return {"status": "error", "message": "Missing project_path or error_message in payload"}
 
     try:

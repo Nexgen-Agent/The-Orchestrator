@@ -129,42 +129,26 @@ class FogDashboard {
     }
 
     renderAgents() {
-        const grid = document.getElementById('agents-grid');
-        const select = document.getElementById('target-agent');
-        if (!grid) return;
+        const miniList = document.getElementById('agents-mini-list');
+        if (!miniList) return;
 
-        console.log("Rendering agents:", this.agents);
-        grid.innerHTML = Object.entries(this.agents).map(([name, config]) => {
+        miniList.innerHTML = Object.entries(this.agents).map(([name, config]) => {
             const isEnabled = this.agentToggles && this.agentToggles[name] !== false;
             return `
-                <div class="glass-card p-6 space-y-4">
-                    <div class="flex justify-between items-start">
-                        <div class="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center">
-                            <i class="fas fa-robot text-blue-400 text-xl"></i>
+                <div class="p-3 bg-white/5 rounded-xl border border-white/5 flex items-center justify-between group hover:bg-white/10 transition-colors">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-lg ${isEnabled ? 'bg-teal-500/10' : 'bg-red-500/10'} flex items-center justify-center">
+                            <i class="fas fa-robot ${isEnabled ? 'text-teal-400' : 'text-red-400'} text-xs"></i>
                         </div>
-                        <div class="px-2 py-1 ${isEnabled ? 'bg-teal-500/20 border-teal-500/30' : 'bg-red-500/20 border-red-500/30'} rounded-md border">
-                            <span class="text-[10px] ${isEnabled ? 'text-teal-400' : 'text-red-400'} font-bold uppercase">${isEnabled ? 'Online' : 'Disabled'}</span>
-                        </div>
+                        <span class="text-xs font-bold">${name}</span>
                     </div>
-                    <div>
-                        <h3 class="font-bold">${name}</h3>
-                        <p class="text-xs text-white/40 font-mono truncate">${config.endpoint}</p>
-                    </div>
-                    <div class="flex space-x-2">
-                        <button class="flex-grow py-2 bg-white/5 hover:bg-white/10 rounded-xl text-xs transition-colors">Configure</button>
-                        <button onclick="app.toggleAgent('${name}', ${isEnabled})" class="px-4 py-2 ${isEnabled ? 'bg-red-500/20 hover:bg-red-500/40 text-red-400' : 'bg-teal-500/20 hover:bg-teal-500/40 text-teal-400'} rounded-xl text-xs transition-colors">
-                            ${isEnabled ? 'Disable' : 'Enable'}
-                        </button>
+                    <div class="flex items-center space-x-2">
+                        <div class="w-1.5 h-1.5 rounded-full ${isEnabled ? 'bg-teal-400 animate-pulse' : 'bg-red-400'}"></div>
+                        <span class="text-[8px] text-white/20 uppercase font-bold">${isEnabled ? 'Online' : 'Off'}</span>
                     </div>
                 </div>
             `;
         }).join('');
-
-        if (select) {
-            const currentVal = select.value;
-            select.innerHTML = '<option value="">Select Agent...</option>' +
-                Object.keys(this.agents).map(name => `<option value="${name}" ${name === currentVal ? 'selected' : ''}>${name}</option>`).join('');
-        }
     }
 
     renderSystemHealth() {
@@ -344,36 +328,133 @@ class FogDashboard {
         alert("Resilience Check Initiated");
     }
 
-    async runAgentCommand() {
-        const agentName = document.getElementById('target-agent').value;
-        const prompt = document.getElementById('agent-prompt').value;
-        const projectPath = document.getElementById('agent-project-path')?.value;
+    async sendChatMessage() {
+        const input = document.getElementById('chat-input');
+        if (!input) return;
+        const prompt = input.value.trim();
+        if (!prompt) return;
 
-        if (!agentName || !prompt) {
-            alert("Please select an agent and enter a prompt.");
-            return;
-        }
+        // Clear input
+        input.value = '';
+        input.style.height = 'auto';
 
-        this.logToConsole(`Sending command to ${agentName}: ${prompt.slice(0, 50)}${prompt.length > 50 ? '...' : ''}`);
+        // Add user message to UI
+        this.appendMessage('user', prompt);
+        this.showTyping(true);
 
         try {
-            const taskType = projectPath ? 'modification' : 'analysis';
-            const payload = { prompt: prompt };
-            if (projectPath) payload.project_path = projectPath;
+            const response = await API.sendChat(prompt);
+            this.logToConsole(`Orchestrator routed to ${response.agent_assigned}. Task ID: ${response.task_id}`, 'success');
 
-            const response = await API.submitTask({
-                task_id: `cmd-${Date.now()}`,
-                task_type: taskType,
-                module_name: 'core',
-                payload: payload,
-                system_name: agentName,
-                timestamp: new Date().toISOString()
-            });
-            this.logToConsole(`Task dispatched. ID: ${response.task_id}`, 'success');
-            this.updateData();
+            // Add orchestrator acknowledgment
+            this.appendMessage('orchestrator', response.message, response.agent_assigned);
+
+            // Update routing context UI
+            const agentTag = document.getElementById('current-agent-tag');
+            const taskStatus = document.getElementById('current-task-status');
+            if (agentTag) agentTag.innerText = response.agent_assigned.toUpperCase();
+            if (taskStatus) {
+                taskStatus.innerText = 'RUNNING';
+                taskStatus.className = 'text-[10px] font-bold text-teal-400';
+            }
+
+            // Start polling for this specific task
+            this.pollTaskResult(response.task_id);
+
         } catch (err) {
-            this.logToConsole(`Error: ${err.message}`, 'error');
+            this.showTyping(false);
+            this.appendMessage('orchestrator', `Error: ${err.message}`, 'System');
+            this.logToConsole(`Chat error: ${err.message}`, 'error');
         }
+    }
+
+    appendMessage(role, text, agentName = '') {
+        const conversation = document.getElementById('chat-conversation');
+        if (!conversation) return;
+
+        const isUser = role === 'user';
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `flex ${isUser ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2 duration-300`;
+
+        const contentClass = isUser
+            ? 'bg-teal-500 text-white rounded-2xl rounded-tr-none p-4 shadow-lg shadow-teal-500/10'
+            : 'bg-white/5 text-white rounded-2xl rounded-tl-none p-4 border border-white/10 shadow-xl';
+
+        msgDiv.innerHTML = `
+            <div class="max-w-[85%] ${contentClass}">
+                <p class="text-sm leading-relaxed">${text}</p>
+                <div class="flex items-center mt-3 pt-3 border-t ${isUser ? 'border-white/20' : 'border-white/5'}">
+                    ${!isUser ? `
+                        <div class="w-4 h-4 rounded-full bg-teal-500/20 flex items-center justify-center mr-2">
+                            <i class="fas fa-robot text-[8px] text-teal-400"></i>
+                        </div>
+                    ` : ''}
+                    <p class="text-[9px] ${isUser ? 'text-white/60' : 'text-white/20'} uppercase font-bold tracking-tighter">
+                        ${isUser ? 'You' : (agentName || 'Orchestrator')} • ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                    </p>
+                </div>
+            </div>
+        `;
+
+        conversation.appendChild(msgDiv);
+        conversation.scrollTop = conversation.scrollHeight;
+    }
+
+    showTyping(show) {
+        const typing = document.getElementById('chat-typing');
+        if (typing) {
+            if (show) typing.classList.remove('hidden');
+            else typing.classList.add('hidden');
+        }
+    }
+
+    async pollTaskResult(taskId) {
+        let attempts = 0;
+        const maxAttempts = 30; // 90 seconds
+
+        const interval = setInterval(async () => {
+            attempts++;
+            try {
+                const task = await API.getTaskStatus(taskId);
+                if (task.status === 'completed') {
+                    clearInterval(interval);
+                    this.showTyping(false);
+
+                    const resultMsg = task.result?.message || "Task completed successfully.";
+                    this.appendMessage('orchestrator', resultMsg, task.system_name);
+
+                    const taskStatus = document.getElementById('current-task-status');
+                    if (taskStatus) {
+                        taskStatus.innerText = 'COMPLETED';
+                        taskStatus.className = 'text-[10px] font-bold text-white/40';
+                    }
+                    this.updateData(); // Refresh global state
+                } else if (task.status === 'failed') {
+                    clearInterval(interval);
+                    this.showTyping(false);
+                    this.appendMessage('orchestrator', `Task failed: ${task.result?.error || 'Unknown error'}`, task.system_name);
+
+                    const taskStatus = document.getElementById('current-task-status');
+                    if (taskStatus) {
+                        taskStatus.innerText = 'FAILED';
+                        taskStatus.className = 'text-[10px] font-bold text-red-400';
+                    }
+                }
+            } catch (err) {
+                console.warn("Polling error", err);
+            }
+
+            if (attempts >= maxAttempts) {
+                clearInterval(interval);
+                this.showTyping(false);
+                this.appendMessage('orchestrator', "Task is taking longer than expected. Please check the Task Management tab.", 'System');
+            }
+        }, 3000);
+    }
+
+    async runAgentCommand() {
+        // Legacy method replaced by sendChatMessage
+        this.sendChatMessage();
     }
 
     stopAgentCommand() {
