@@ -2,9 +2,9 @@ from typing import Dict, Any
 from agents.shooting_star_intelligence.intelligence import ShootingStarIntelligence
 
 async def handle_task(task_packet: Dict[str, Any]) -> Dict[str, Any]:
-    \"\"\"
+    """
     Orchestration handler for Shooting Star Intelligence.
-    \"\"\"
+    """
     payload = task_packet.get("payload", {})
     action = payload.get("action")
     agent_name = payload.get("agent_name")

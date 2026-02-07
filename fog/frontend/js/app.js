@@ -158,17 +158,17 @@ class FogDashboard {
         const workerLoadEl = document.getElementById('worker-load');
         const memoryLoadEl = document.getElementById('memory-load');
 
-        const workerUsage = Math.round(this.systemHealth.overall_task_metrics.success_rate * 100); // Mocking load from success rate for demo
-        const memoryUsage = 45; // Placeholder or calculate from something
+        const cpuUsage = Math.round(this.systemHealth.resource_usage?.cpu_percent || 0);
+        const memoryUsage = Math.round(this.systemHealth.resource_usage?.memory_percent || 0);
 
-        if (workerLoadEl) workerLoadEl.innerText = `${workerUsage}%`;
+        if (workerLoadEl) workerLoadEl.innerText = `${cpuUsage}%`;
         if (memoryLoadEl) memoryLoadEl.innerText = `${memoryUsage}%`;
 
         // Update bars
         const workerBar = document.getElementById('worker-bar');
         const memoryBar = document.getElementById('memory-bar');
 
-        if (workerBar) workerBar.style.width = `${workerUsage}%`;
+        if (workerBar) workerBar.style.width = `${cpuUsage}%`;
         if (memoryBar) memoryBar.style.width = `${memoryUsage}%`;
 
         // Update status indicator
@@ -305,21 +305,22 @@ class FogDashboard {
         const path = input ? input.value : prompt("Enter project path for deployment:");
         if (path) {
             try {
-                // Assuming API has runDeployment or similar, or we use submitTask
-                await API.post('/deployment/run', { project_path: path });
+                await API.runDeployment(path);
                 alert("Deployment Triggered");
+                this.updateData();
             } catch (err) {
-                alert(`Deployment failed to start: ${err.message}`);
+                this.showError(`Deployment failed: ${err.message}`);
             }
         }
     }
 
     async triggerLearningCycle() {
         try {
-            await API.post('/learning/trigger');
+            await API.runLearningCycle();
             alert("Learning Cycle Initiated");
+            this.updateData();
         } catch (err) {
-            alert(`Failed to trigger learning: ${err.message}`);
+            this.showError(`Learning cycle failed: ${err.message}`);
         }
     }
 

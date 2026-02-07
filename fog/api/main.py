@@ -24,18 +24,33 @@ import os
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Re-register agents from state store
+    # Re-register agents from state store and auto-discover
     from fog.core.state import state_store
-    from fog.core.connector import agent_registry, HttpAgentConnector, MockAgentConnector
+    from fog.core.connector import agent_registry, HttpAgentConnector, MockAgentConnector, LocalAgentConnector
 
+    # 1. Registered agents from state store
     agents = state_store.get_agents()
     for name, config in agents.items():
         if config.get("handler_type") == "mock":
             connector = MockAgentConnector(name, config["endpoint"])
+        elif config.get("handler_type") == "local":
+            connector = LocalAgentConnector(name, config["endpoint"])
         else:
             connector = HttpAgentConnector(name, config["endpoint"])
         agent_registry.register_agent(connector)
         print(f"Re-registered agent: {name}")
+
+    # 2. Auto-discover local agents
+    if os.path.exists("agents"):
+        for agent_dir in os.listdir("agents"):
+            if os.path.isdir(os.path.join("agents", agent_dir)) and os.path.exists(os.path.join("agents", agent_dir, "handler.py")):
+                # Derive name from directory (PascalCase)
+                name = "".join(word.capitalize() for word in agent_dir.split("_"))
+                if name not in agent_registry.agents:
+                    connector = LocalAgentConnector(name, f"local://{agent_dir}")
+                    agent_registry.register_agent(connector)
+                    state_store.add_agent(name, {"name": name, "endpoint": f"local://{agent_dir}", "handler_type": "local"})
+                    print(f"Auto-discovered and registered agent: {name}")
 
     await orchestration_engine.start()
     yield

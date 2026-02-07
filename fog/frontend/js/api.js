@@ -46,5 +46,9 @@ const API = {
     runDebug(projectPath) { return this.post('/debugger/run', { project_path: projectPath }); },
 
     // Resilience
-    runResilienceCheck() { return this.post('/resilience/analyze-and-fix'); }
+    runResilienceCheck() { return this.post('/resilience/analyze-and-fix'); },
+
+    // Deployment & Learning
+    runDeployment(projectPath) { return this.post('/deployment/run', { project_path: projectPath }); },
+    runLearningCycle() { return this.post('/learning/trigger'); }
 };
