@@ -7,4 +7,3 @@ playwright
 pytest
 pytest-asyncio
 matplotlib
-graphviz
