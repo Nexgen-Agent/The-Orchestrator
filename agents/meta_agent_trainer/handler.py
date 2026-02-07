@@ -3,9 +3,9 @@ from agents.meta_agent_trainer.engine import MetaAgentTrainerEngine
 from agents.meta_agent_trainer.models import AgentBlueprint
 
 async def handle_task(task_packet: Dict[str, Any]) -> Dict[str, Any]:
-    \"\"\"
+    """
     Orchestration handler for Meta-Agent Trainer Engine (MATE).
-    \"\"\"
+    """
     payload = task_packet.get("payload", {})
     action = payload.get("action")
     engine = MetaAgentTrainerEngine()

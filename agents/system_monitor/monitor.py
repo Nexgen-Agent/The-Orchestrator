@@ -1,6 +1,8 @@
+import os
+import psutil
 from typing import Dict, List, Any, Optional
 from datetime import datetime, timedelta
-from agents.system_monitor.models import AgentHealth, TaskMetrics, FailurePattern, SystemHealthReport
+from agents.system_monitor.models import AgentHealth, TaskMetrics, FailurePattern, SystemHealthReport, ResourceUsage
 
 class SystemMonitor:
     def __init__(self, state_store: Any):
@@ -15,21 +17,32 @@ class SystemMonitor:
         # 2. Analyze Tasks
         task_metrics = self._analyze_tasks(state.get("tasks", {}))
 
-        # 3. Detect Patterns
+        # 3. Resource Usage
+        resources = self._get_resource_usage()
+
+        # 4. Detect Patterns
         patterns = self._detect_failure_patterns(state.get("tasks", {}))
 
-        # 4. Determine overall status
+        # 5. Determine overall status
         system_status = "Nominal"
-        if task_metrics.success_rate < 0.5 or any(a.status == "Unhealthy" for a in agents_health):
+        if task_metrics.success_rate < 0.5 or any(a.status == "Unhealthy" for a in agents_health) or resources.memory_percent > 90:
             system_status = "Critical"
-        elif task_metrics.success_rate < 0.8:
+        elif task_metrics.success_rate < 0.8 or resources.memory_percent > 75:
             system_status = "Degraded"
 
         return SystemHealthReport(
             agents=agents_health,
             overall_task_metrics=task_metrics,
+            resource_usage=resources,
             detected_patterns=patterns,
             system_status=system_status
+        )
+
+    def _get_resource_usage(self) -> ResourceUsage:
+        return ResourceUsage(
+            cpu_percent=psutil.cpu_percent(),
+            memory_percent=psutil.virtual_memory().percent,
+            disk_usage_percent=psutil.disk_usage('/').percent
         )
 
     def _analyze_agents(self, agents_data: Dict[str, Any]) -> List[AgentHealth]:

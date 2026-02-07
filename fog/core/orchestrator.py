@@ -6,6 +6,7 @@ from fog.core.connector import agent_registry
 from fog.core.state import state_store
 import uuid
 from fog.core.logging import logger
+from agents.personality_engine.engine import FingerprintManager, StyleAdaptor
 
 class ChatOrchestrator:
     def __init__(self):
@@ -17,8 +18,9 @@ class ChatOrchestrator:
             "SelfEvolutionEngine": ["improve", "evolve", "optimize", "upgrade", "refactor"],
             "Debugger": ["debug", "trace", "crash", "log analysis", "inspect"]
         }
+        self.personality = FingerprintManager()
 
-    async def process(self, prompt: str) -> Dict[str, Any]:
+    async def process(self, prompt: str, user_id: str = "default_user") -> Dict[str, Any]:
         """
         Process a user prompt, route to an agent, and return dispatch info.
         """
@@ -39,12 +41,27 @@ class ChatOrchestrator:
         logger.info("CHAT_ORCHESTRATOR_ROUTING", {"prompt": prompt, "agent": agent_name, "task_id": task_id})
         await orchestration_engine.submit_task(task)
 
+        # 4. Generate Personalized Acknowledgment
+        profile = self.personality.get_profile(user_id)
+        adaptation = StyleAdaptor.generate_adaptation(profile)
+
+        message = self._generate_message(agent_name, adaptation)
+
         return {
             "status": "dispatched",
             "task_id": task_id,
             "agent_assigned": agent_name,
-            "message": f"Orchestrator has assigned this task to {agent_name}."
+            "message": message
         }
+
+    def _generate_message(self, agent_name: str, adaptation: Any) -> str:
+        tone = adaptation.target_tone
+        if tone == "formal":
+            return f"I have successfully analyzed your request and delegated the execution to the {agent_name} module. You will be notified upon completion."
+        elif tone == "casual":
+            return f"Got it! I'm sending that over to {agent_name} right now. I'll let you know when it's done! 🚀"
+        else:
+            return f"Orchestrator has assigned this task to {agent_name}. Monitoring progress now."
 
     def _route(self, prompt: str) -> str:
         prompt_lower = prompt.lower()
