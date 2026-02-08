@@ -50,5 +50,11 @@ const API = {
 
     // Deployment & Learning
     runDeployment(projectPath) { return this.post('/deployment/run', { project_path: projectPath }); },
-    runLearningCycle() { return this.post('/learning/trigger'); }
+    runLearningCycle() { return this.post('/learning/trigger'); },
+
+    // Rollback
+    triggerRollback(backupId) {
+        const id = backupId || 'latest';
+        return this.post(`/human-control/rollback/${id}`);
+    }
 };
