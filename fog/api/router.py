@@ -74,11 +74,14 @@ async def get_system_state():
 @router.post("/chat")
 async def chat(message: Dict[str, str]):
     prompt = message.get("prompt")
+    session_id = message.get("session_id", "default_session")
+    user_id = message.get("user_id", "default_user")
+
     if not prompt:
         raise HTTPException(status_code=400, detail="Prompt is required")
 
     try:
-        response = await chat_orchestrator.process(prompt)
+        response = await chat_orchestrator.process(prompt, user_id=user_id, session_id=session_id)
         return response
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

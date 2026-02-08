@@ -1,108 +1,102 @@
-INFO:     Started server process [55776]
+INFO:     Started server process [62007]
 INFO:     Waiting for application startup.
-2026-02-08 04:37:21,115 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.115510", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "TestAgent", "endpoint": "http://localhost:9000"}}
+2026-02-08 05:31:45,798 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.798515", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "TestAgent", "endpoint": "http://localhost:9000"}}
 Re-registered agent: TestAgent
-2026-02-08 04:37:21,115 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.115781", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "FrictionSolver", "endpoint": "http://localhost:3000/friction-solver"}}
+2026-02-08 05:31:45,798 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.798763", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "FrictionSolver", "endpoint": "http://localhost:3000/friction-solver"}}
 Re-registered agent: FrictionSolver
-2026-02-08 04:37:21,115 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.115887", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "SelfEvolutionEngine", "endpoint": "http://localhost:3000/self-evolution"}}
+2026-02-08 05:31:45,798 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.798866", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "SelfEvolutionEngine", "endpoint": "http://localhost:3000/self-evolution"}}
 Re-registered agent: SelfEvolutionEngine
-2026-02-08 04:37:21,115 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.115962", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "MetaAgentTrainer", "endpoint": "http://localhost:3000/mate"}}
+2026-02-08 05:31:45,798 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.798950", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "MetaAgentTrainer", "endpoint": "http://localhost:3000/mate"}}
 Re-registered agent: MetaAgentTrainer
-2026-02-08 04:37:21,116 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.116029", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "ShootingStarIntelligence", "endpoint": "http://localhost:3000/shooting-star-intelligence"}}
+2026-02-08 05:31:45,799 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.799017", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "ShootingStarIntelligence", "endpoint": "http://localhost:3000/shooting-star-intelligence"}}
 Re-registered agent: ShootingStarIntelligence
-2026-02-08 04:37:21,116 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.116097", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "LogicSummarizer", "endpoint": "local://logic_summarizer"}}
+2026-02-08 05:31:45,799 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.799154", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "LogicSummarizer", "endpoint": "local://logic_summarizer"}}
 Re-registered agent: LogicSummarizer
-2026-02-08 04:37:21,116 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.116159", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "SemanticTagger", "endpoint": "local://semantic_tagger"}}
+2026-02-08 05:31:45,799 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.799298", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "SemanticTagger", "endpoint": "local://semantic_tagger"}}
 Re-registered agent: SemanticTagger
-2026-02-08 04:37:21,116 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.116305", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "SystemMonitor", "endpoint": "local://system_monitor"}}
+2026-02-08 05:31:45,799 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.799362", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "SystemMonitor", "endpoint": "local://system_monitor"}}
 Re-registered agent: SystemMonitor
-2026-02-08 04:37:21,116 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.116376", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "WebsiteInsightScout", "endpoint": "local://website_insight_scout"}}
+2026-02-08 05:31:45,799 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.799429", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "WebsiteInsightScout", "endpoint": "local://website_insight_scout"}}
 Re-registered agent: WebsiteInsightScout
-2026-02-08 04:37:21,116 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.116437", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "SelfEvaluator", "endpoint": "local://self_evaluator"}}
+2026-02-08 05:31:45,799 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.799487", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "SelfEvaluator", "endpoint": "local://self_evaluator"}}
 Re-registered agent: SelfEvaluator
-2026-02-08 04:37:21,116 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.116498", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "Visualization", "endpoint": "local://visualization"}}
+2026-02-08 05:31:45,799 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.799552", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "Visualization", "endpoint": "local://visualization"}}
 Re-registered agent: Visualization
-2026-02-08 04:37:21,116 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.116631", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "ShootingStarIngestion", "endpoint": "local://shooting_star_ingestion"}}
+2026-02-08 05:31:45,799 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.799610", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "ShootingStarIngestion", "endpoint": "local://shooting_star_ingestion"}}
 Re-registered agent: ShootingStarIngestion
-2026-02-08 04:37:21,116 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.116716", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "TestGenerator", "endpoint": "local://test_generator"}}
+2026-02-08 05:31:45,799 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.799666", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "TestGenerator", "endpoint": "local://test_generator"}}
 Re-registered agent: TestGenerator
-2026-02-08 04:37:21,116 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.116777", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "DeploymentPreparer", "endpoint": "local://deployment_preparer"}}
+2026-02-08 05:31:45,799 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.799722", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "DeploymentPreparer", "endpoint": "local://deployment_preparer"}}
 Re-registered agent: DeploymentPreparer
-2026-02-08 04:37:21,116 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.116835", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "DependencyRepair", "endpoint": "local://dependency_repair"}}
+2026-02-08 05:31:45,799 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.799782", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "DependencyRepair", "endpoint": "local://dependency_repair"}}
 Re-registered agent: DependencyRepair
-2026-02-08 04:37:21,116 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.116898", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "AgentCollaboration", "endpoint": "local://agent_collaboration"}}
+2026-02-08 05:31:45,799 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.799837", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "AgentCollaboration", "endpoint": "local://agent_collaboration"}}
 Re-registered agent: AgentCollaboration
-2026-02-08 04:37:21,116 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.116957", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "SoftwareBuilder", "endpoint": "local://software_builder"}}
+2026-02-08 05:31:45,799 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.799892", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "SoftwareBuilder", "endpoint": "local://software_builder"}}
 Re-registered agent: SoftwareBuilder
-2026-02-08 04:37:21,117 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.117032", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "PersonalityEngine", "endpoint": "local://personality_engine"}}
+2026-02-08 05:31:45,799 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.799954", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "PersonalityEngine", "endpoint": "local://personality_engine"}}
 Re-registered agent: PersonalityEngine
-2026-02-08 04:37:21,117 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.117090", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "MetaEvolution", "endpoint": "local://meta_evolution"}}
+2026-02-08 05:31:45,800 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.800010", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "MetaEvolution", "endpoint": "local://meta_evolution"}}
 Re-registered agent: MetaEvolution
-2026-02-08 04:37:21,117 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.117145", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "StructureAnalyzer", "endpoint": "local://structure_analyzer"}}
+2026-02-08 05:31:45,800 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.800105", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "StructureAnalyzer", "endpoint": "local://structure_analyzer"}}
 Re-registered agent: StructureAnalyzer
-2026-02-08 04:37:21,117 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.117263", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "BackupVerifier", "endpoint": "local://backup_verifier"}}
+2026-02-08 05:31:45,800 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.800180", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "BackupVerifier", "endpoint": "local://backup_verifier"}}
 Re-registered agent: BackupVerifier
-2026-02-08 04:37:21,117 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.117340", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "PromptOrchestrator", "endpoint": "local://prompt_orchestrator"}}
+2026-02-08 05:31:45,800 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.800238", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "PromptOrchestrator", "endpoint": "local://prompt_orchestrator"}}
 Re-registered agent: PromptOrchestrator
-2026-02-08 04:37:21,117 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.117398", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "DependencyGraph", "endpoint": "local://dependency_graph"}}
+2026-02-08 05:31:45,800 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.800295", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "DependencyGraph", "endpoint": "local://dependency_graph"}}
 Re-registered agent: DependencyGraph
-2026-02-08 04:37:21,117 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.117455", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "SandboxSimulation", "endpoint": "local://sandbox_simulation"}}
+2026-02-08 05:31:45,800 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.800350", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "SandboxSimulation", "endpoint": "local://sandbox_simulation"}}
 Re-registered agent: SandboxSimulation
-2026-02-08 04:37:21,117 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.117510", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "StressTest", "endpoint": "local://stress_test"}}
+2026-02-08 05:31:45,800 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.800405", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "StressTest", "endpoint": "local://stress_test"}}
 Re-registered agent: StressTest
-2026-02-08 04:37:21,117 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.117568", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "DeploymentAutomation", "endpoint": "local://deployment_automation"}}
+2026-02-08 05:31:45,800 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.800471", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "DeploymentAutomation", "endpoint": "local://deployment_automation"}}
 Re-registered agent: DeploymentAutomation
-2026-02-08 04:37:21,117 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.117624", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "OrchestrationOptimizer", "endpoint": "local://orchestration_optimizer"}}
+2026-02-08 05:31:45,800 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.800528", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "OrchestrationOptimizer", "endpoint": "local://orchestration_optimizer"}}
 Re-registered agent: OrchestrationOptimizer
-2026-02-08 04:37:21,117 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.117683", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "Debugger", "endpoint": "local://debugger"}}
+2026-02-08 05:31:45,800 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.800587", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "Debugger", "endpoint": "local://debugger"}}
 Re-registered agent: Debugger
-2026-02-08 04:37:21,117 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.117738", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "KnowledgeMemory", "endpoint": "local://knowledge_memory"}}
+2026-02-08 05:31:45,800 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.800642", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "KnowledgeMemory", "endpoint": "local://knowledge_memory"}}
 Re-registered agent: KnowledgeMemory
-2026-02-08 04:37:21,117 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.117794", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "CodeQuality", "endpoint": "local://code_quality"}}
+2026-02-08 05:31:45,800 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.800706", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "CodeQuality", "endpoint": "local://code_quality"}}
 Re-registered agent: CodeQuality
-2026-02-08 04:37:21,117 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.117848", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "EvolutionCoordinator", "endpoint": "local://evolution_coordinator"}}
+2026-02-08 05:31:45,800 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.800762", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "EvolutionCoordinator", "endpoint": "local://evolution_coordinator"}}
 Re-registered agent: EvolutionCoordinator
-2026-02-08 04:37:21,117 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.117902", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "ArchitectureRefactor", "endpoint": "local://architecture_refactor"}}
+2026-02-08 05:31:45,800 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.800817", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "ArchitectureRefactor", "endpoint": "local://architecture_refactor"}}
 Re-registered agent: ArchitectureRefactor
-2026-02-08 04:37:21,117 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.117958", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "SecurityAnalyzer", "endpoint": "local://security_analyzer"}}
+2026-02-08 05:31:45,800 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.800872", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "SecurityAnalyzer", "endpoint": "local://security_analyzer"}}
 Re-registered agent: SecurityAnalyzer
-2026-02-08 04:37:21,118 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.118012", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "SystemResilience", "endpoint": "local://system_resilience"}}
+2026-02-08 05:31:45,800 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.800926", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "SystemResilience", "endpoint": "local://system_resilience"}}
 Re-registered agent: SystemResilience
-2026-02-08 04:37:21,118 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.118074", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "ImprovementPlanner", "endpoint": "local://improvement_planner"}}
+2026-02-08 05:31:45,800 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.800980", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "ImprovementPlanner", "endpoint": "local://improvement_planner"}}
 Re-registered agent: ImprovementPlanner
-2026-02-08 04:37:21,118 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.118133", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "HumanControlInterface", "endpoint": "local://human_control_interface"}}
+2026-02-08 05:31:45,801 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.801033", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "HumanControlInterface", "endpoint": "local://human_control_interface"}}
 Re-registered agent: HumanControlInterface
-2026-02-08 04:37:21,118 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.118246", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "LearningFeedback", "endpoint": "local://learning_feedback"}}
+2026-02-08 05:31:45,801 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.801137", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "LearningFeedback", "endpoint": "local://learning_feedback"}}
 Re-registered agent: LearningFeedback
-2026-02-08 04:37:21,119 - FOG - INFO - {"timestamp": "2026-02-08T04:37:21.118985", "level": "INFO", "event": "ENGINE_STARTED", "data": {"num_workers": 5}}
+2026-02-08 05:31:45,801 - FOG - INFO - {"timestamp": "2026-02-08T05:31:45.801831", "level": "INFO", "event": "ENGINE_STARTED", "data": {"num_workers": 5}}
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:3003 (Press CTRL+C to quit)
-INFO:     127.0.0.1:38008 - "GET / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:38008 - "GET /static/css/styles.css HTTP/1.1" 200 OK
-INFO:     127.0.0.1:38018 - "GET /static/js/api.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:38020 - "GET /static/js/app.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:38020 - "GET /system-state HTTP/1.1" 200 OK
-INFO:     127.0.0.1:38020 - "GET /human-control/approvals/pending HTTP/1.1" 200 OK
-INFO:     127.0.0.1:38020 - "GET /system-monitor/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:38020 - "GET /human-control/agent-toggles HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50376 - "GET / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50380 - "GET /static/js/api.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50376 - "GET /static/css/styles.css HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50390 - "GET /static/js/app.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50390 - "GET /system-state HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50390 - "GET /human-control/approvals/pending HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50390 - "GET /system-monitor/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50390 - "GET /human-control/agent-toggles HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50390 - "GET /system-state HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50390 - "GET /human-control/approvals/pending HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50390 - "GET /system-monitor/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50390 - "GET /human-control/agent-toggles HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50390 - "POST /chat HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50390 - "GET /system-state HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50390 - "GET /human-control/approvals/pending HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50390 - "GET /system-monitor/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50390 - "GET /human-control/agent-toggles HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50390 - "GET /system-state HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50390 - "GET /human-control/approvals/pending HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50390 - "GET /system-monitor/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50390 - "GET /human-control/agent-toggles HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40964 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40964 - "GET /static/css/styles.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40968 - "GET /static/js/api.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40976 - "GET /static/js/app.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40968 - "GET /system-state HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40968 - "GET /human-control/approvals/pending HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40968 - "GET /system-monitor/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40968 - "GET /human-control/agent-toggles HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40968 - "POST /chat HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40968 - "GET /system-state HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40968 - "GET /human-control/approvals/pending HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40968 - "GET /system-monitor/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40968 - "GET /human-control/agent-toggles HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40968 - "POST /chat HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40968 - "GET /system-state HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40968 - "GET /human-control/approvals/pending HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40968 - "GET /system-monitor/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40968 - "GET /human-control/agent-toggles HTTP/1.1" 200 OK
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2026-02-08 05:31:44,097 - FOG - INFO - {"timestamp": "2026-02-08T05:31:44.097561", "level": "INFO", "event": "ENGINE_STOPPED", "data": {}}
+INFO:     Application shutdown complete.
+INFO:     Finished server process [61037]

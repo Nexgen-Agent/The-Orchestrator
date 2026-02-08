@@ -23,37 +23,39 @@ class ChatResponseSynthesizer:
         status = data.get("system_status", "Unknown")
         cpu = data.get("resource_usage", {}).get("cpu_percent", 0)
         mem = data.get("resource_usage", {}).get("memory_percent", 0)
-        agents = data.get("agents_online", 0)
+        agents_count = data.get("agents_online", 0)
+        agent_status = data.get("agent_status", {})
         fixes = data.get("recent_fixes", [])
 
+        offline_agents = [name for name, s in agent_status.items() if s != "Online"]
+
         if tone == "casual":
-            msg = f"Systems are looking {status.lower()} right now! 🟢\n\n"
-            msg += f"- **CPU**: {cpu}%\n"
-            msg += f"- **Memory**: {mem}%\n"
-            msg += f"- **Agents Online**: {agents}\n\n"
+            msg = f"The system is currently {status.lower()}! 🟢 "
+            msg += f"CPU usage is around {cpu}% and memory is at {mem}%. We've got {agents_count} agents active right now. "
+
+            if offline_agents:
+                msg += f"\n\nJust so you know, I'm having some trouble connecting to: {', '.join(offline_agents)}. I'll try to get them back online. "
 
             if fixes:
-                msg += "Recent Resilience Activity:\n"
-                for fix in fixes:
-                    msg += f"- ✅ {fix.get('action_type', 'Action')}: {fix.get('target', 'system')}\n"
-                msg += "\n"
+                msg += "\n\nI've also handled some recent issues to keep things stable: "
+                fix_desc = [f"recovered {f.get('target')}" for f in fixes if f.get('action_type') == 'RECOVER_TASK']
+                msg += ", ".join(fix_desc[:2]) + ". "
 
-            msg += "Everything's running smooth. What's next on the list?"
+            msg += "\n\nIs there anything specific you'd like me to look into?"
             return msg
         else:
-            msg = f"The current system status is **{status}**.\n\n"
-            msg += f"**Resource Metrics:**\n"
-            msg += f"- Processor Load: {cpu}%\n"
-            msg += f"- Memory Utilization: {mem}%\n"
-            msg += f"- Active Agent Handlers: {agents}\n\n"
+            msg = f"System analysis indicates a **{status}** status. "
+            msg += f"Resource utilization is currently at {cpu}% CPU and {mem}% memory, with {agents_count} agent handlers engaged. "
+
+            if offline_agents:
+                msg += f"\n\nConnectivity Alert: The following agents are currently unreachable: {', '.join(offline_agents)}. "
 
             if fixes:
-                msg += "**Recent Resilience Recoveries:**\n"
-                for fix in fixes:
-                    msg += f"- {fix.get('action_type', 'Action')} on {fix.get('target', 'target')}: {fix.get('status', 'Completed')}\n"
-                msg += "\n"
+                msg += "\n\nResilience protocols have successfully addressed recent failures, including: "
+                targets = [f.get('target') for f in fixes]
+                msg += ", ".join(targets[:3]) + ". "
 
-            msg += "The orchestration engine is operating within nominal parameters."
+            msg += "\n\nThe orchestration environment remains stable and operational."
             return msg
 
     @staticmethod
@@ -63,28 +65,29 @@ class ChatResponseSynthesizer:
         summary = data.get("evaluation_summary", "")
 
         if tone == "casual":
-            msg = f"We're about **{readiness:.1f}%** of the way to full operational glory! 🚀\n\n"
+            msg = f"We're currently at **{readiness:.1f}%** readiness for full deployment! 🚀 "
 
             if summary:
-                msg += f"**The vibe:** {summary}\n\n"
+                msg += f"Basically, {summary.lower().replace('.', '')}. "
 
             if modules:
-                msg += "Here's the breakdown:\n"
-                for m in modules:
-                    msg += f"- {m['agent_name']}: {m['capability_percentage']:.1f}%\n"
-            msg += "\nWe're getting closer every cycle!"
+                top_modules = sorted(modules, key=lambda x: x['capability_percentage'], reverse=True)[:3]
+                msg += "\n\nOur strongest modules right now are " + ", ".join([f"{m['agent_name']} ({m['capability_percentage']:.0f}%)" for m in top_modules]) + ". "
+
+            msg += "\n\nWe're making solid progress toward the 98% goal!"
             return msg
         else:
-            msg = f"System-wide operational readiness is currently at **{readiness:.1f}%**.\n\n"
+            msg = f"Overall system readiness is assessed at **{readiness:.1f}%**. "
 
             if summary:
-                msg += f"**Performance Assessment:** {summary}\n\n"
+                msg += f"{summary} "
 
             if modules:
-                msg += "Detailed Module Readiness:\n"
-                for m in modules:
-                    msg += f"- **{m['agent_name']}**: {m['capability_percentage']:.1f}% readiness score.\n"
-            msg += "\nFull operational status will be achieved upon all critical modules reaching 98% capability."
+                msg += "\n\nModule Capability Analysis:\n"
+                for m in modules[:5]:
+                    msg += f"- **{m['agent_name']}**: {m['capability_percentage']:.1f}% functional readiness.\n"
+
+            msg += "\nOperational deployment will proceed once the aggregate score exceeds the 98% threshold."
             return msg
 
     @staticmethod

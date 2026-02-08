@@ -14,10 +14,11 @@ class FogDashboard {
     }
 
     init() {
+        this.sessionId = 'session-' + Math.random().toString(36).substr(2, 9);
         this.setupEventListeners();
         this.startPolling();
         this.render();
-        this.appendMessage('orchestrator', 'System initialized. I am the FOG Orchestrator. How can I assist you today?', 'Orchestrator');
+        this.appendMessage('orchestrator', 'System initialized. I am the FOG Orchestrator. How can I assist you today?');
     }
 
     setupEventListeners() {
@@ -387,47 +388,27 @@ class FogDashboard {
         this.showTyping(true);
 
         try {
-            const response = await API.sendChat(prompt);
+            const response = await API.sendChat(prompt, this.sessionId);
+
+            this.showTyping(false);
+            this.appendMessage('orchestrator', response.message);
 
             if (response.status === 'completed') {
-                this.showTyping(false);
-                this.appendMessage('orchestrator', response.message, response.agent_assigned);
-                this.logToConsole(`Orchestrator provided direct answer.`, 'success');
-
-                const agentTag = document.getElementById('current-agent-tag');
-                const taskStatus = document.getElementById('current-task-status');
-                if (agentTag) agentTag.innerText = 'ORCHESTRATOR';
-                if (taskStatus) {
-                    taskStatus.innerText = 'COMPLETED';
-                    taskStatus.className = 'text-[10px] font-bold text-white/40';
-                }
+                this.logToConsole(`Orchestrator responded directly.`, 'success');
             } else {
-                this.logToConsole(`Orchestrator routed to ${response.agent_assigned}. Task ID: ${response.task_id}`, 'success');
-
-                // Add orchestrator acknowledgment
-                this.appendMessage('orchestrator', response.message, response.agent_assigned);
-
-                // Update routing context UI
-                const agentTag = document.getElementById('current-agent-tag');
-                const taskStatus = document.getElementById('current-task-status');
-                if (agentTag) agentTag.innerText = response.agent_assigned.toUpperCase();
-                if (taskStatus) {
-                    taskStatus.innerText = 'RUNNING';
-                    taskStatus.className = 'text-[10px] font-bold text-teal-400';
-                }
-
-                // Start polling for this specific task
+                this.logToConsole(`Orchestrator initiated background process. Task ID: ${response.task_id}`, 'success');
+                // We still poll for the task result but we don't spam the chat with "Agent Assigned"
                 this.pollTaskResult(response.task_id);
             }
 
         } catch (err) {
             this.showTyping(false);
-            this.appendMessage('orchestrator', `Error: ${err.message}`, 'System');
+            this.appendMessage('orchestrator', `Error: ${err.message}`);
             this.logToConsole(`Chat error: ${err.message}`, 'error');
         }
     }
 
-    appendMessage(role, text, agentName = '') {
+    appendMessage(role, text) {
         const conversation = document.getElementById('chat-conversation');
         if (!conversation) return;
 
@@ -452,11 +433,11 @@ class FogDashboard {
                 <div class="flex items-center mt-3 pt-3 border-t ${isUser ? 'border-white/20' : 'border-white/5'}">
                     ${!isUser ? `
                         <div class="w-4 h-4 rounded-full bg-teal-500/20 flex items-center justify-center mr-2">
-                            <i class="fas fa-robot text-[8px] text-teal-400"></i>
+                            <i class="fas fa-brain text-[8px] text-teal-400"></i>
                         </div>
                     ` : ''}
                     <p class="text-[9px] ${isUser ? 'text-white/60' : 'text-white/20'} uppercase font-bold tracking-tighter">
-                        ${isUser ? 'You' : (agentName || 'Orchestrator')} • ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                        ${isUser ? 'You' : 'Orchestrator'} • ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                     </p>
                 </div>
             </div>
