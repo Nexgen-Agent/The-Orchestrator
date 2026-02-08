@@ -63,7 +63,7 @@
                 <!-- Overview View -->
                 <div id="overview-view" class="view space-y-8">
                     <!-- Dashboard Grid -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <!-- Running Tasks Card -->
                         <div class="glass-card p-6 flex flex-col">
                             <div class="flex justify-between items-center mb-6">
@@ -86,7 +86,7 @@
                                 <div>
                                     <div class="flex justify-between text-xs mb-2">
                                         <span class="text-white/60">Worker Capacity</span>
-                                        <span id="worker-load">72%</span>
+                                        <span id="worker-load">0%</span>
                                     </div>
                                     <div class="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
                                         <div id="worker-bar" class="h-full bg-gradient-to-r from-teal-400 to-blue-500 rounded-full transition-all duration-500" style="width: 0%"></div>
@@ -102,6 +102,20 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Agents Landing Grid -->
+                    <div>
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-sm font-semibold uppercase tracking-widest text-white/40">Registered Agents</h3>
+                            <span class="text-[10px] text-white/20 bg-white/5 px-2 py-1 rounded uppercase">Autonomous Ecosystem</span>
+                        </div>
+                        <div id="agents-landing-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                            <!-- Agent cards will be injected here -->
+                            <div class="animate-pulse h-32 bg-white/5 rounded-2xl"></div>
+                            <div class="animate-pulse h-32 bg-white/5 rounded-2xl"></div>
+                            <div class="animate-pulse h-32 bg-white/5 rounded-2xl"></div>
                         </div>
                     </div>
 
@@ -123,25 +137,42 @@
                 </div>
 
                 <!-- Chat View -->
-                <div id="agents-view" class="view hidden h-[calc(100vh-140px)] flex flex-col">
-                    <div class="max-w-4xl mx-auto w-full flex-grow flex flex-col overflow-hidden relative">
-                        <div id="chat-conversation" class="flex-grow overflow-y-auto p-6 space-y-8 no-scrollbar pb-32">
-                            <!-- Messages will be injected here -->
-                        </div>
+                <div id="agents-view" class="view hidden h-[calc(100vh-80px)] md:h-[calc(100vh-0px)] flex flex-col relative">
+                    <div id="chat-conversation" class="flex-grow overflow-y-auto p-6 space-y-8 no-scrollbar pb-40">
+                        <!-- Messages will be injected here -->
+                    </div>
 
-                        <div id="chat-typing" class="hidden absolute bottom-28 left-6 flex items-center space-x-1 bg-[#0A1428]/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
-                            <span class="w-1 h-1 bg-teal-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></span>
-                            <span class="w-1 h-1 bg-teal-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></span>
-                            <span class="w-1 h-1 bg-teal-400 rounded-full animate-bounce" style="animation-delay: 0.3s"></span>
-                            <span class="text-[10px] text-teal-400 font-bold ml-1 uppercase tracking-widest">Thinking</span>
-                        </div>
+                    <!-- Fixed Chat Input Container -->
+                    <div class="fixed-chat-input-wrapper">
+                        <div class="max-w-4xl mx-auto w-full px-6 pb-8">
+                            <div id="chat-typing" class="hidden flex items-center space-x-1 mb-3 bg-[#0A1428]/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 w-fit">
+                                <span class="w-1 h-1 bg-teal-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></span>
+                                <span class="w-1 h-1 bg-teal-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></span>
+                                <span class="w-1 h-1 bg-teal-400 rounded-full animate-bounce" style="animation-delay: 0.3s"></span>
+                                <span class="text-[10px] text-teal-400 font-bold ml-1 uppercase tracking-widest">Thinking</span>
+                            </div>
 
-                        <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-[#050B18] via-[#050B18]/90 to-transparent">
-                            <div class="relative group">
-                                <textarea id="chat-input" rows="1" onkeydown="if(event.keyCode===13 && !event.shiftKey){event.preventDefault(); app.sendChatMessage();}" placeholder="Message FOG Orchestrator..." class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-4 pr-16 text-sm focus:border-teal-500/50 outline-none resize-none transition-all group-focus-within:bg-white/10 shadow-2xl"></textarea>
-                                <button onclick="app.sendChatMessage()" class="absolute right-2 top-2 bottom-2 w-12 bg-teal-500 rounded-xl flex items-center justify-center shadow-lg shadow-teal-500/20 hover:bg-teal-400 transition-all active:scale-95">
-                                    <i class="fas fa-paper-plane text-xs"></i>
-                                </button>
+                            <div class="relative group flex flex-col bg-white/5 border border-white/10 rounded-2xl transition-all focus-within:bg-white/10 shadow-2xl backdrop-blur-xl">
+                                <!-- File Preview Area -->
+                                <div id="file-preview-container" class="hidden flex flex-wrap gap-2 p-3 border-b border-white/10">
+                                    <!-- File previews injected here -->
+                                </div>
+
+                                <div class="flex items-end p-2">
+                                    <button onclick="document.getElementById('file-upload').click()" class="w-10 h-10 flex-shrink-0 flex items-center justify-center text-white/40 hover:text-teal-400 transition-colors">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                    <input type="file" id="file-upload" class="hidden" multiple onchange="app.handleFileSelect(event)">
+
+                                    <textarea id="chat-input" rows="1" placeholder="Message FOG Orchestrator..."
+                                        class="flex-grow bg-transparent border-none py-3 px-3 text-sm focus:ring-0 outline-none resize-none max-h-60 overflow-y-auto"
+                                        oninput="app.autoResizeInput(this)"
+                                        onkeydown="if(event.keyCode===13 && !event.shiftKey){event.preventDefault(); app.sendChatMessage();}"></textarea>
+
+                                    <button onclick="app.sendChatMessage()" class="w-10 h-10 flex-shrink-0 bg-teal-500 rounded-xl flex items-center justify-center shadow-lg shadow-teal-500/20 hover:bg-teal-400 transition-all active:scale-95 ml-2">
+                                        <i class="fas fa-paper-plane text-[10px]"></i>
+                                    </button>
+                                </div>
                             </div>
                             <p class="text-[10px] text-white/20 text-center mt-3 tracking-widest uppercase">Frontier Orchestration Gateway v1.1</p>
                         </div>
@@ -271,6 +302,64 @@
                     </div>
                 </div>
                 <button onclick="app.handleDispatch()" class="w-full py-3 bg-teal-500 rounded-xl font-bold shadow-lg shadow-teal-500/20">Dispatch Task</button>
+            </div>
+        </div>
+
+        <!-- Agent Details Modal -->
+        <div id="agent-details-modal" class="fixed inset-0 z-[110] bg-black/80 backdrop-blur-xl flex items-center justify-center p-6 hidden">
+            <div class="glass-card max-w-2xl w-full p-8 space-y-8 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-teal-500/10 rounded-full blur-[80px] -mr-32 -mt-32"></div>
+
+                <div class="flex justify-between items-start relative z-10">
+                    <div class="flex items-center space-x-4">
+                        <div id="modal-agent-icon" class="w-16 h-16 rounded-2xl bg-teal-500/20 flex items-center justify-center border border-teal-500/30">
+                            <i class="fas fa-robot text-2xl text-teal-400"></i>
+                        </div>
+                        <div>
+                            <h2 id="modal-agent-name" class="text-2xl font-bold tracking-tight">Agent Name</h2>
+                            <div class="flex items-center space-x-2 mt-1">
+                                <div id="modal-agent-status-dot" class="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></div>
+                                <span id="modal-agent-status-text" class="text-xs font-bold uppercase tracking-widest text-teal-400">Online</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="app.hideAgentDetails()" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors">
+                        <i class="fas fa-times text-white/40"></i>
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
+                    <div class="bg-white/5 rounded-2xl p-4 border border-white/5">
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-white/40 mb-2">Health</p>
+                        <p id="modal-agent-health" class="text-xl font-bold">100%</p>
+                        <div class="w-full h-1 bg-white/10 rounded-full mt-2 overflow-hidden">
+                            <div id="modal-agent-health-bar" class="h-full bg-teal-400" style="width: 100%"></div>
+                        </div>
+                    </div>
+                    <div class="bg-white/5 rounded-2xl p-4 border border-white/5">
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-white/40 mb-2">Progress</p>
+                        <p id="modal-agent-progress" class="text-xl font-bold">Stable</p>
+                        <div class="w-full h-1 bg-white/10 rounded-full mt-2 overflow-hidden">
+                            <div id="modal-agent-progress-bar" class="h-full bg-blue-400" style="width: 100%"></div>
+                        </div>
+                    </div>
+                    <div class="bg-white/5 rounded-2xl p-4 border border-white/5">
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-white/40 mb-2">Tasks Completed</p>
+                        <p id="modal-agent-tasks" class="text-xl font-bold">0</p>
+                    </div>
+                </div>
+
+                <div class="space-y-4 relative z-10">
+                    <h3 class="text-sm font-bold uppercase tracking-widest text-white/40">Current Activity</h3>
+                    <div id="modal-agent-activity" class="bg-black/40 rounded-2xl p-6 border border-white/5 min-h-[120px] flex items-center justify-center text-center">
+                        <p class="text-sm text-white/60 italic">Waiting for task assignments...</p>
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-3 relative z-10">
+                    <button id="modal-toggle-btn" class="px-6 py-3 rounded-xl border border-white/10 text-sm font-bold hover:bg-white/5 transition-colors">Disable Agent</button>
+                    <button onclick="app.hideAgentDetails()" class="px-8 py-3 bg-teal-500 rounded-xl text-sm font-bold shadow-lg shadow-teal-500/20 hover:bg-teal-400 transition-all">Close</button>
+                </div>
             </div>
         </div>
 
