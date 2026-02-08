@@ -36,12 +36,12 @@ class FogDashboard {
             const visualBottom = visualViewport.height + visualViewport.offsetTop;
             const offset = Math.max(0, layoutHeight - visualBottom);
 
-            // Directly set the bottom property. If offset is small (e.g. browser bar changes), snap to 0.
+            // Directly set the bottom property. If offset is small (e.g. browser bar changes), snap to 5px.
             if (offset < 30) {
-                wrapper.style.bottom = '0px';
+                wrapper.style.bottom = '5px';
             } else {
                 // Cap the offset to 50% of screen height to prevent "middle of screen" jumping
-                const cappedOffset = Math.min(offset, layoutHeight * 0.5);
+                const cappedOffset = Math.min(offset + 5, layoutHeight * 0.5);
                 wrapper.style.bottom = `${cappedOffset}px`;
             }
 
