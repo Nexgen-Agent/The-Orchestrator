@@ -202,6 +202,23 @@ class FogDashboard {
                 pauseBtn.innerHTML = '<i class="fas fa-pause mr-2 text-teal-400"></i> Pause System';
             }
         }
+
+        // Emergency View Updates
+        const safeModeStatus = document.getElementById('safe-mode-status');
+        const lockStatus = document.getElementById('lock-status');
+        if (safeModeStatus) {
+            const isSafe = this.systemHealth.safe_mode_active || false;
+            safeModeStatus.innerText = isSafe ? 'Active' : 'Inactive';
+            safeModeStatus.className = isSafe
+                ? 'text-xs font-mono px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/20 uppercase'
+                : 'text-xs font-mono px-2 py-0.5 rounded bg-green-500/10 text-green-400 border border-green-500/20 uppercase';
+        }
+        if (lockStatus) {
+            lockStatus.innerText = this.isPaused ? 'Locked' : 'Unlocked';
+            lockStatus.className = this.isPaused
+                ? 'text-xs font-mono px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 uppercase'
+                : 'text-xs font-mono px-2 py-0.5 rounded bg-green-500/10 text-green-400 border border-green-500/20 uppercase';
+        }
     }
 
     renderFullTaskList() {
@@ -328,6 +345,31 @@ class FogDashboard {
     async checkResilience() {
         await API.runResilienceCheck();
         alert("Resilience Check Initiated");
+    }
+
+    async emergencyStop() {
+        if (confirm("Are you sure you want to trigger an EMERGENCY STOP? This will halt all operations.")) {
+            try {
+                await API.emergencyStop();
+                alert("Emergency Stop Triggered");
+                this.updateData();
+            } catch (err) {
+                alert(`Action failed: ${err.message}`);
+            }
+        }
+    }
+
+    async triggerRollback() {
+        const id = prompt("Enter Backup ID to rollback to (leave blank for latest):");
+        if (confirm(`Trigger rollback to ${id || 'latest'}?`)) {
+            try {
+                await API.triggerRollback(id);
+                alert("Rollback Triggered");
+                this.updateData();
+            } catch (err) {
+                alert(`Rollback failed: ${err.message}`);
+            }
+        }
     }
 
     async sendChatMessage() {
