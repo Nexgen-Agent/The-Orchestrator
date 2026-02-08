@@ -413,12 +413,8 @@ class FogDashboard {
         if (!conversation) return;
 
         const isUser = role === 'user';
-        const msgDiv = document.createElement('div');
-        msgDiv.className = `flex ${isUser ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2 duration-300`;
-
-        const contentClass = isUser
-            ? 'bg-teal-500 text-white rounded-2xl rounded-tr-none p-4 shadow-lg shadow-teal-500/10'
-            : 'bg-white/5 text-white rounded-2xl rounded-tl-none p-4 border border-white/10 shadow-xl';
+        const rowDiv = document.createElement('div');
+        rowDiv.className = `chat-message-row ${isUser ? 'user' : 'orchestrator'} animate-in fade-in slide-in-from-bottom-2 duration-300`;
 
         // Simple Markdown-to-HTML (Links and Bold)
         let processedText = text
@@ -427,23 +423,21 @@ class FogDashboard {
             .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" class="text-teal-400 underline hover:text-teal-300 transition-colors">$1</a>')
             .replace(/\n/g, '<br>');
 
-        msgDiv.innerHTML = `
-            <div class="max-w-[85%] ${contentClass}">
+        rowDiv.innerHTML = `
+            <div class="chat-bubble ${isUser ? 'user' : 'orchestrator'}">
                 <div class="text-sm leading-relaxed">${processedText}</div>
-                <div class="flex items-center mt-3 pt-3 border-t ${isUser ? 'border-white/20' : 'border-white/5'}">
-                    ${!isUser ? `
-                        <div class="w-4 h-4 rounded-full bg-teal-500/20 flex items-center justify-center mr-2">
-                            <i class="fas fa-brain text-[8px] text-teal-400"></i>
-                        </div>
-                    ` : ''}
-                    <p class="text-[9px] ${isUser ? 'text-white/60' : 'text-white/20'} uppercase font-bold tracking-tighter">
-                        ${isUser ? 'You' : 'Orchestrator'} • ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                <div class="mt-2 pt-2 border-t ${isUser ? 'border-white/10' : 'border-white/5'} flex items-center justify-between">
+                    <p class="text-[8px] ${isUser ? 'text-white/50' : 'text-white/30'} uppercase font-bold tracking-widest">
+                        ${isUser ? 'User' : 'FOG Orchestrator'}
+                    </p>
+                    <p class="text-[8px] ${isUser ? 'text-white/50' : 'text-white/30'} font-medium">
+                        ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                     </p>
                 </div>
             </div>
         `;
 
-        conversation.appendChild(msgDiv);
+        conversation.appendChild(rowDiv);
         conversation.scrollTop = conversation.scrollHeight;
     }
 
@@ -468,24 +462,12 @@ class FogDashboard {
                     this.showTyping(false);
 
                     const resultMsg = task.result?.message || "Task completed successfully.";
-                    this.appendMessage('orchestrator', resultMsg, task.system_name);
-
-                    const taskStatus = document.getElementById('current-task-status');
-                    if (taskStatus) {
-                        taskStatus.innerText = 'COMPLETED';
-                        taskStatus.className = 'text-[10px] font-bold text-white/40';
-                    }
+                    this.appendMessage('orchestrator', resultMsg);
                     this.updateData(); // Refresh global state
                 } else if (task.status === 'failed') {
                     clearInterval(interval);
                     this.showTyping(false);
-                    this.appendMessage('orchestrator', `Task failed: ${task.result?.error || 'Unknown error'}`, task.system_name);
-
-                    const taskStatus = document.getElementById('current-task-status');
-                    if (taskStatus) {
-                        taskStatus.innerText = 'FAILED';
-                        taskStatus.className = 'text-[10px] font-bold text-red-400';
-                    }
+                    this.appendMessage('orchestrator', `Task failed: ${task.result?.error || 'Unknown error'}`);
                 }
             } catch (err) {
                 console.warn("Polling error", err);

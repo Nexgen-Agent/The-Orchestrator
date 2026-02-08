@@ -90,3 +90,59 @@ body::before {
     pointer-events: none;
     z-index: 1;
 }
+
+/* Chat UI Extensions */
+.chat-message-row {
+    display: flex;
+    width: 100%;
+}
+
+.chat-message-row.user {
+    justify-content: flex-end;
+}
+
+.chat-message-row.orchestrator {
+    justify-content: flex-start;
+}
+
+.chat-bubble {
+    max-width: 80%;
+    padding: 1rem 1.25rem;
+    border-radius: 1.5rem;
+    position: relative;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.chat-bubble.user {
+    background: linear-gradient(135deg, #4fd1c5 0%, #38b2ac 100%);
+    color: white;
+    border-bottom-right-radius: 0.25rem;
+}
+
+.chat-bubble.orchestrator {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.9);
+    border-bottom-left-radius: 0.25rem;
+}
+
+/* Scrollbar styling for chat */
+#chat-conversation::-webkit-scrollbar {
+    width: 6px;
+}
+
+#chat-conversation::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#chat-conversation::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+#chat-conversation::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
