@@ -16,9 +16,36 @@ class FogDashboard {
     init() {
         this.sessionId = 'session-' + Math.random().toString(36).substr(2, 9);
         this.setupEventListeners();
+        this.setupKeyboardHandling();
         this.startPolling();
         this.render();
         this.appendMessage('orchestrator', 'System initialized. I am the FOG Orchestrator. How can I assist you today?');
+    }
+
+    setupKeyboardHandling() {
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', () => {
+                const wrapper = document.querySelector('.fixed-chat-input-wrapper');
+                if (!wrapper) return;
+
+                const viewportHeight = window.visualViewport.height;
+                const windowHeight = window.innerHeight;
+                const offset = windowHeight - viewportHeight;
+
+                if (offset > 50) { // Keyboard likely open
+                    wrapper.style.bottom = `${offset}px`;
+                    // Smoothly scroll conversation to keep up with keyboard
+                    const conv = document.getElementById('chat-conversation');
+                    if (conv) {
+                        setTimeout(() => {
+                            conv.scrollTop = conv.scrollHeight;
+                        }, 50);
+                    }
+                } else {
+                    wrapper.style.bottom = '0px';
+                }
+            });
+        }
     }
 
     setupEventListeners() {
@@ -439,8 +466,11 @@ class FogDashboard {
     }
 
     autoResizeInput(textarea) {
-        textarea.style.height = 'auto';
-        textarea.style.height = (textarea.scrollHeight) + 'px';
+        textarea.style.height = '48px';
+        const scrollHeight = textarea.scrollHeight;
+        if (scrollHeight > 48) {
+            textarea.style.height = Math.min(scrollHeight, 240) + 'px';
+        }
     }
 
     handleFileSelect(event) {
