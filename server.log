@@ -1,0 +1,92 @@
+INFO:     Started server process [101025]
+INFO:     Waiting for application startup.
+2026-02-08 17:43:58,950 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.950698", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "TestAgent", "endpoint": "http://localhost:9000"}}
+Re-registered agent: TestAgent
+2026-02-08 17:43:58,951 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.951024", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "FrictionSolver", "endpoint": "http://localhost:3000/friction-solver"}}
+Re-registered agent: FrictionSolver
+2026-02-08 17:43:58,951 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.951126", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "SelfEvolutionEngine", "endpoint": "http://localhost:3000/self-evolution"}}
+Re-registered agent: SelfEvolutionEngine
+2026-02-08 17:43:58,951 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.951201", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "MetaAgentTrainer", "endpoint": "http://localhost:3000/mate"}}
+Re-registered agent: MetaAgentTrainer
+2026-02-08 17:43:58,951 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.951343", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "ShootingStarIntelligence", "endpoint": "http://localhost:3000/shooting-star-intelligence"}}
+Re-registered agent: ShootingStarIntelligence
+2026-02-08 17:43:58,951 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.951433", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "LogicSummarizer", "endpoint": "local://logic_summarizer"}}
+Re-registered agent: LogicSummarizer
+2026-02-08 17:43:58,951 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.951500", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "SemanticTagger", "endpoint": "local://semantic_tagger"}}
+Re-registered agent: SemanticTagger
+2026-02-08 17:43:58,951 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.951562", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "SystemMonitor", "endpoint": "local://system_monitor"}}
+Re-registered agent: SystemMonitor
+2026-02-08 17:43:58,951 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.951621", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "WebsiteInsightScout", "endpoint": "local://website_insight_scout"}}
+Re-registered agent: WebsiteInsightScout
+2026-02-08 17:43:58,951 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.951683", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "SelfEvaluator", "endpoint": "local://self_evaluator"}}
+Re-registered agent: SelfEvaluator
+2026-02-08 17:43:58,951 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.951744", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "Visualization", "endpoint": "local://visualization"}}
+Re-registered agent: Visualization
+2026-02-08 17:43:58,951 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.951858", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "ShootingStarIngestion", "endpoint": "local://shooting_star_ingestion"}}
+Re-registered agent: ShootingStarIngestion
+2026-02-08 17:43:58,951 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.951922", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "TestGenerator", "endpoint": "local://test_generator"}}
+Re-registered agent: TestGenerator
+2026-02-08 17:43:58,951 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.951983", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "DeploymentPreparer", "endpoint": "local://deployment_preparer"}}
+Re-registered agent: DeploymentPreparer
+2026-02-08 17:43:58,952 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.952042", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "DependencyRepair", "endpoint": "local://dependency_repair"}}
+Re-registered agent: DependencyRepair
+2026-02-08 17:43:58,952 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.952100", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "AgentCollaboration", "endpoint": "local://agent_collaboration"}}
+Re-registered agent: AgentCollaboration
+2026-02-08 17:43:58,952 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.952158", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "SoftwareBuilder", "endpoint": "local://software_builder"}}
+Re-registered agent: SoftwareBuilder
+2026-02-08 17:43:58,952 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.952238", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "PersonalityEngine", "endpoint": "local://personality_engine"}}
+Re-registered agent: PersonalityEngine
+2026-02-08 17:43:58,952 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.952300", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "MetaEvolution", "endpoint": "local://meta_evolution"}}
+Re-registered agent: MetaEvolution
+2026-02-08 17:43:58,952 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.952386", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "StructureAnalyzer", "endpoint": "local://structure_analyzer"}}
+Re-registered agent: StructureAnalyzer
+2026-02-08 17:43:58,952 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.952470", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "BackupVerifier", "endpoint": "local://backup_verifier"}}
+Re-registered agent: BackupVerifier
+2026-02-08 17:43:58,952 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.952540", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "PromptOrchestrator", "endpoint": "local://prompt_orchestrator"}}
+Re-registered agent: PromptOrchestrator
+2026-02-08 17:43:58,952 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.952599", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "DependencyGraph", "endpoint": "local://dependency_graph"}}
+Re-registered agent: DependencyGraph
+2026-02-08 17:43:58,952 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.952654", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "SandboxSimulation", "endpoint": "local://sandbox_simulation"}}
+Re-registered agent: SandboxSimulation
+2026-02-08 17:43:58,952 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.952710", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "StressTest", "endpoint": "local://stress_test"}}
+Re-registered agent: StressTest
+2026-02-08 17:43:58,952 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.952810", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "DeploymentAutomation", "endpoint": "local://deployment_automation"}}
+Re-registered agent: DeploymentAutomation
+2026-02-08 17:43:58,952 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.952879", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "OrchestrationOptimizer", "endpoint": "local://orchestration_optimizer"}}
+Re-registered agent: OrchestrationOptimizer
+2026-02-08 17:43:58,952 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.952940", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "Debugger", "endpoint": "local://debugger"}}
+Re-registered agent: Debugger
+2026-02-08 17:43:58,953 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.952998", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "KnowledgeMemory", "endpoint": "local://knowledge_memory"}}
+Re-registered agent: KnowledgeMemory
+2026-02-08 17:43:58,953 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.953054", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "CodeQuality", "endpoint": "local://code_quality"}}
+Re-registered agent: CodeQuality
+2026-02-08 17:43:58,953 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.953111", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "EvolutionCoordinator", "endpoint": "local://evolution_coordinator"}}
+Re-registered agent: EvolutionCoordinator
+2026-02-08 17:43:58,953 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.953166", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "ArchitectureRefactor", "endpoint": "local://architecture_refactor"}}
+Re-registered agent: ArchitectureRefactor
+2026-02-08 17:43:58,953 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.953222", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "SecurityAnalyzer", "endpoint": "local://security_analyzer"}}
+Re-registered agent: SecurityAnalyzer
+2026-02-08 17:43:58,953 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.953276", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "SystemResilience", "endpoint": "local://system_resilience"}}
+Re-registered agent: SystemResilience
+2026-02-08 17:43:58,953 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.953349", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "ImprovementPlanner", "endpoint": "local://improvement_planner"}}
+Re-registered agent: ImprovementPlanner
+2026-02-08 17:43:58,953 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.953417", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "HumanControlInterface", "endpoint": "local://human_control_interface"}}
+Re-registered agent: HumanControlInterface
+2026-02-08 17:43:58,953 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.953474", "level": "INFO", "event": "AGENT_REGISTERED", "data": {"name": "LearningFeedback", "endpoint": "local://learning_feedback"}}
+Re-registered agent: LearningFeedback
+2026-02-08 17:43:58,954 - FOG - INFO - {"timestamp": "2026-02-08T17:43:58.954311", "level": "INFO", "event": "ENGINE_STARTED", "data": {"num_workers": 5}}
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8005 (Press CTRL+C to quit)
+INFO:     127.0.0.1:52612 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52612 - "GET /static/css/styles.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52624 - "GET /static/js/api.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52628 - "GET /static/js/app.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52628 - "GET /system-state HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52628 - "GET /human-control/approvals/pending HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52628 - "GET /system-monitor/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52628 - "GET /human-control/agent-toggles HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2026-02-08 17:44:06,348 - FOG - INFO - {"timestamp": "2026-02-08T17:44:06.348660", "level": "INFO", "event": "ENGINE_STOPPED", "data": {}}
+INFO:     Application shutdown complete.
+INFO:     Finished server process [101025]
