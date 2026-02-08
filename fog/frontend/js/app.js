@@ -97,6 +97,7 @@ class FogDashboard {
     render() {
         this.renderActiveTasks();
         this.renderAgents();
+        this.renderAgentsLanding();
         this.renderFullTaskList();
         this.renderSystemHealth();
     }
@@ -131,6 +132,7 @@ class FogDashboard {
     }
 
     renderAgents() {
+        // Legacy mini list if it exists
         const miniList = document.getElementById('agents-mini-list');
         if (!miniList) return;
 
@@ -151,6 +153,69 @@ class FogDashboard {
                 </div>
             `;
         }).join('');
+    }
+
+    renderAgentsLanding() {
+        const grid = document.getElementById('agents-landing-grid');
+        if (!grid) return;
+
+        if (Object.keys(this.agents).length === 0) {
+            grid.innerHTML = `<div class="col-span-full py-12 text-center text-white/20 italic">No agents registered in the ecosystem</div>`;
+            return;
+        }
+
+        grid.innerHTML = Object.entries(this.agents).map(([name, config]) => {
+            const isEnabled = this.agentToggles && this.agentToggles[name] !== false;
+            return `
+                <div class="agent-landing-card group" onclick="app.showAgentDetails('${name}')">
+                    <div class="flex justify-between items-start">
+                        <div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-teal-500/10 transition-colors">
+                            <i class="fas fa-robot ${isEnabled ? 'text-teal-400' : 'text-white/20'} text-xl"></i>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-1.5 h-1.5 rounded-full ${isEnabled ? 'bg-teal-400 animate-pulse' : 'bg-red-400'}"></div>
+                            <span class="text-[8px] text-white/40 uppercase font-bold tracking-widest">${isEnabled ? 'Active' : 'Standby'}</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold mt-4">${name}</h4>
+                        <p class="text-[10px] text-white/40 uppercase mt-1">Status: ${isEnabled ? 'Nominal' : 'Disabled'}</p>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    showAgentDetails(name) {
+        const agent = this.agents[name];
+        if (!agent) return;
+
+        const modal = document.getElementById('agent-details-modal');
+        const isEnabled = this.agentToggles && this.agentToggles[name] !== false;
+
+        document.getElementById('modal-agent-name').innerText = name;
+        document.getElementById('modal-agent-status-text').innerText = isEnabled ? 'Online' : 'Offline';
+        document.getElementById('modal-agent-status-text').className = isEnabled ? 'text-xs font-bold uppercase tracking-widest text-teal-400' : 'text-xs font-bold uppercase tracking-widest text-red-400';
+        document.getElementById('modal-agent-status-dot').className = isEnabled ? 'w-2 h-2 rounded-full bg-teal-400 animate-pulse' : 'w-2 h-2 rounded-full bg-red-400';
+
+        // Mock health and progress for UI
+        document.getElementById('modal-agent-health').innerText = '100%';
+        document.getElementById('modal-agent-health-bar').style.width = '100%';
+        document.getElementById('modal-agent-progress').innerText = isEnabled ? 'Stable' : 'Paused';
+        document.getElementById('modal-agent-progress-bar').style.width = isEnabled ? '100%' : '20%';
+
+        const toggleBtn = document.getElementById('modal-toggle-btn');
+        toggleBtn.innerText = isEnabled ? 'Disable Agent' : 'Enable Agent';
+        toggleBtn.onclick = () => {
+            this.toggleAgent(name, isEnabled);
+            this.hideAgentDetails();
+        };
+
+        modal.classList.remove('hidden');
+    }
+
+    hideAgentDetails() {
+        document.getElementById('agent-details-modal')?.classList.add('hidden');
     }
 
     renderSystemHealth() {
@@ -373,6 +438,45 @@ class FogDashboard {
         }
     }
 
+    autoResizeInput(textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = (textarea.scrollHeight) + 'px';
+    }
+
+    handleFileSelect(event) {
+        const files = Array.from(event.target.files);
+        const container = document.getElementById('file-preview-container');
+        if (!container) return;
+
+        container.classList.remove('hidden');
+
+        files.forEach(file => {
+            const item = document.createElement('div');
+            item.className = 'file-preview-item animate-in fade-in zoom-in duration-200';
+
+            const isImage = file.type.startsWith('image/');
+            const icon = isImage ? '<i class="fas fa-image text-teal-400"></i>' : '<i class="fas fa-file-alt text-blue-400"></i>';
+
+            item.innerHTML = `
+                ${icon}
+                <span class="text-[10px] truncate max-w-[100px]">${file.name}</span>
+                <button onclick="this.parentElement.remove(); app.checkFilePreviews()" class="text-white/20 hover:text-red-400">
+                    <i class="fas fa-times text-[8px]"></i>
+                </button>
+            `;
+            container.appendChild(item);
+        });
+
+        event.target.value = ''; // Reset input
+    }
+
+    checkFilePreviews() {
+        const container = document.getElementById('file-preview-container');
+        if (container && container.children.length === 0) {
+            container.classList.add('hidden');
+        }
+    }
+
     async sendChatMessage() {
         const input = document.getElementById('chat-input');
         if (!input) return;
@@ -382,6 +486,10 @@ class FogDashboard {
         // Clear input
         input.value = '';
         input.style.height = 'auto';
+        this.checkFilePreviews();
+        const container = document.getElementById('file-preview-container');
+        if (container) container.innerHTML = '';
+        if (container) container.classList.add('hidden');
 
         // Add user message to UI
         this.appendMessage('user', prompt);

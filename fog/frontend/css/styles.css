@@ -146,3 +146,67 @@ body::before {
 #chat-conversation::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.2);
 }
+
+/* Fixed Chat Input Layout */
+.fixed-chat-input-wrapper {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 30;
+    pointer-events: none;
+}
+
+.fixed-chat-input-wrapper > * {
+    pointer-events: auto;
+}
+
+/* Agent Landing Cards */
+.agent-landing-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 1.5rem;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 160px;
+}
+
+.agent-landing-card:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(79, 209, 197, 0.3);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px -10px rgba(79, 209, 197, 0.2);
+}
+
+/* File Preview Styles */
+.file-preview-item {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    max-width: 180px;
+}
+
+.file-preview-image {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+/* Inputs */
+#chat-input::-webkit-scrollbar {
+    width: 4px;
+}
+
+#chat-input::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
