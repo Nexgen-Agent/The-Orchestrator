@@ -23,29 +23,45 @@ class FogDashboard {
     }
 
     setupKeyboardHandling() {
-        if (window.visualViewport) {
-            window.visualViewport.addEventListener('resize', () => {
-                const wrapper = document.querySelector('.fixed-chat-input-wrapper');
-                if (!wrapper) return;
+        const visualViewport = window.visualViewport;
+        if (!visualViewport) return;
 
-                const viewportHeight = window.visualViewport.height;
-                const windowHeight = window.innerHeight;
-                const offset = windowHeight - viewportHeight;
+        const handleViewportChange = () => {
+            const wrapper = document.querySelector('.fixed-chat-input-wrapper');
+            if (!wrapper || this.currentView !== 'agents') return;
 
-                if (offset > 50) { // Keyboard likely open
-                    wrapper.style.bottom = `${offset}px`;
-                    // Smoothly scroll conversation to keep up with keyboard
-                    const conv = document.getElementById('chat-conversation');
-                    if (conv) {
-                        setTimeout(() => {
-                            conv.scrollTop = conv.scrollHeight;
-                        }, 50);
-                    }
-                } else {
-                    wrapper.style.bottom = '0px';
-                }
-            });
-        }
+            // Calculate the distance from the bottom of the layout viewport to the bottom of the visual viewport
+            // This is the most stable way to detect keyboard height + scroll/pan offset
+            const layoutHeight = window.innerHeight;
+            const visualBottom = visualViewport.height + visualViewport.offsetTop;
+            const offset = Math.max(0, layoutHeight - visualBottom);
+
+            // Directly set the bottom property. If offset is small (e.g. browser bar changes), snap to 0.
+            if (offset < 30) {
+                wrapper.style.bottom = '0px';
+            } else {
+                // Cap the offset to 50% of screen height to prevent "middle of screen" jumping
+                const cappedOffset = Math.min(offset, layoutHeight * 0.5);
+                wrapper.style.bottom = `${cappedOffset}px`;
+            }
+
+            // Keep conversation scrolled to bottom when keyboard is up
+            const conv = document.getElementById('chat-conversation');
+            if (conv && offset > 50) {
+                conv.scrollTop = conv.scrollHeight;
+            }
+        };
+
+        visualViewport.addEventListener('resize', handleViewportChange);
+        visualViewport.addEventListener('scroll', handleViewportChange);
+
+        // Also trigger on input focus to ensure immediate correction
+        document.addEventListener('focusin', (e) => {
+            if (e.target.id === 'chat-input') {
+                setTimeout(handleViewportChange, 100);
+                setTimeout(handleViewportChange, 300); // Second pass for slower keyboard animations
+            }
+        });
     }
 
     setupEventListeners() {
