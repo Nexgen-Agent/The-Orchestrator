@@ -22,6 +22,7 @@ const API = {
 
     // Core System
     getSystemState() { return this.get('/system-state'); },
+    getSystemHealth() { return this.get('/system-monitor/health'); },
 
     // Human Control Agent
     getPendingApprovals() { return this.get('/human-control/approvals/pending'); },
@@ -38,11 +39,24 @@ const API = {
     // Tasks
     submitTask(task) { return this.post('/submit-task', task); },
     getTaskStatus(id) { return this.get(`/task-status/${id}`); },
+    sendChat(prompt, session_id = 'default_session') {
+        return this.post('/chat', { prompt, session_id });
+    },
 
     // Builder & Debugger
     runBuild(projectPath) { return this.post('/builder/build', { project_path: projectPath }); },
     runDebug(projectPath) { return this.post('/debugger/run', { project_path: projectPath }); },
 
     // Resilience
-    runResilienceCheck() { return this.post('/resilience/analyze-and-fix'); }
+    runResilienceCheck() { return this.post('/resilience/analyze-and-fix'); },
+
+    // Deployment & Learning
+    runDeployment(projectPath) { return this.post('/deployment/run', { project_path: projectPath }); },
+    runLearningCycle() { return this.post('/learning/trigger'); },
+
+    // Rollback
+    triggerRollback(backupId) {
+        const id = backupId || 'latest';
+        return this.post(`/human-control/rollback/${id}`);
+    }
 };

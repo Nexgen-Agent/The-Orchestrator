@@ -21,9 +21,15 @@ class FailurePattern(BaseModel):
     affected_components: List[str]
     occurrence_count: int
 
+class ResourceUsage(BaseModel):
+    cpu_percent: float
+    memory_percent: float
+    disk_usage_percent: float
+
 class SystemHealthReport(BaseModel):
     timestamp: datetime = Field(default_factory=datetime.now)
     agents: List[AgentHealth]
     overall_task_metrics: TaskMetrics
+    resource_usage: ResourceUsage
     detected_patterns: List[FailurePattern]
     system_status: str # "Nominal", "Degraded", "Critical"

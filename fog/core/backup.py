@@ -43,7 +43,15 @@ class BackupManager:
 
     def rollback(self, backup_id: str):
         backups = state_store.get_backups()
-        backup_metadata = next((b for b in backups if b["backup_id"] == backup_id), None)
+
+        if backup_id == "latest":
+            if not backups:
+                raise ValueError("No backups available to rollback to latest.")
+            # Sort by timestamp descending
+            sorted_backups = sorted(backups, key=lambda x: x["timestamp"], reverse=True)
+            backup_metadata = sorted_backups[0]
+        else:
+            backup_metadata = next((b for b in backups if b["backup_id"] == backup_id), None)
 
         if not backup_metadata:
             raise ValueError(f"Backup ID {backup_id} not found")

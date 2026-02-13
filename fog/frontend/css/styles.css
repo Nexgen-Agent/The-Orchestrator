@@ -90,3 +90,154 @@ body::before {
     pointer-events: none;
     z-index: 1;
 }
+
+/* Chat UI Extensions */
+.chat-message-row {
+    display: flex;
+    width: 100%;
+}
+
+.chat-message-row.user {
+    justify-content: flex-end;
+}
+
+.chat-message-row.orchestrator {
+    justify-content: flex-start;
+}
+
+.chat-bubble {
+    max-width: 80%;
+    padding: 1rem 1.25rem;
+    border-radius: 1.5rem;
+    position: relative;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.chat-bubble.user {
+    background: linear-gradient(135deg, #4fd1c5 0%, #38b2ac 100%);
+    color: white;
+    border-bottom-right-radius: 0.25rem;
+}
+
+.chat-bubble.orchestrator {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.9);
+    border-bottom-left-radius: 0.25rem;
+}
+
+/* Scrollbar styling for chat */
+#chat-conversation::-webkit-scrollbar {
+    width: 6px;
+}
+
+#chat-conversation::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#chat-conversation::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+#chat-conversation::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Fixed Chat Input Layout */
+.fixed-chat-input-wrapper {
+    position: fixed;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    pointer-events: none;
+    /* Transition removed to prevent "jumping" and fighting with JS keyboard positioning */
+}
+
+@media (min-width: 768px) {
+    .fixed-chat-input-wrapper {
+        left: 5rem; /* Match sidebar width (w-20) */
+    }
+}
+
+.fixed-chat-input-wrapper > * {
+    pointer-events: auto;
+}
+
+/* Modern Message Bar Enhancements */
+.chat-input-container {
+    background: rgba(10, 20, 40, 0.8);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    padding: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.chat-input-container:focus-within {
+    background: rgba(15, 30, 60, 0.9);
+    border-color: rgba(79, 209, 197, 0.4);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6), 0 0 20px rgba(79, 209, 197, 0.1);
+}
+
+/* Agent Landing Cards */
+.agent-landing-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 1.5rem;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 160px;
+}
+
+.agent-landing-card:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(79, 209, 197, 0.3);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px -10px rgba(79, 209, 197, 0.2);
+}
+
+/* File Preview Styles */
+.file-preview-item {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    max-width: 180px;
+}
+
+.file-preview-image {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+/* Inputs */
+#chat-input {
+    min-height: 48px;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    line-height: 1.5;
+}
+
+#chat-input::-webkit-scrollbar {
+    width: 4px;
+}
+
+#chat-input::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}

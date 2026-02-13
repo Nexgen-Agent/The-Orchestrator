@@ -10,6 +10,16 @@ async def run_deployment(project_path: str, manifest: DeploymentManifest):
     automation = DeploymentAutomation(project_path)
     return await automation.run_deployment(manifest)
 
+@router.post("/run", response_model=DeploymentReport)
+async def run_simple_deployment(data: Dict[str, str]):
+    project_path = data.get("project_path")
+    if not project_path:
+        raise HTTPException(status_code=400, detail="project_path is required")
+    automation = DeploymentAutomation(project_path)
+    # Generate a default manifest
+    manifest = automation.generate_manifest(service_name="fog-service", image_tag="latest")
+    return await automation.run_deployment(manifest)
+
 @router.post("/rollback/{deployment_id}", response_model=DeploymentReport)
 async def rollback(project_path: str, deployment_id: str):
     automation = DeploymentAutomation(project_path)

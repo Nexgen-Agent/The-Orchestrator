@@ -1,0 +1,11 @@
+fastapi
+pydantic
+uvicorn
+httpx
+networkx
+playwright
+pytest
+pytest-asyncio
+matplotlib
+graphviz
+psutil
